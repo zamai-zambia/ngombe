@@ -2,7 +2,7 @@
 
 ## A records pilot for the Southern Province cattle sector: the mandate and the funding requested
 
-DRAFT, version 0.81, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
+DRAFT, version 0.82, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
 
 [QR]
 
@@ -56,7 +56,7 @@ Contributed by Zamai, and committed: the development work, its hosting on our ow
 | 2,000 to 3,000 scored pictures: 25 to 40 dip days with a scorer and a recorder, transport | 6,000 |
 | Phones, chargers, power banks; a server, its power backup and connectivity for the year | 6,500 |
 | Model training runs and the line's model calls | 2,000 |
-| Logistics: fuel or a motorbike for the sites and dip days, meals and per diems on field days, a bed when the tank is far, airtime and data bundles | 6,000 |
+| Logistics: field days at K500 per person, fuel for an existing motorbike, a bed when the tank is far, airtime and data bundles | 6,000 |
 | Training days and meetings; data-protection registration and agreements; measurement and the report | 11,000 |
 | Subtotal | 50,000 |
 | Contingency, 15 percent | 7,500 |
@@ -77,7 +77,7 @@ Contributed by Zamai, and committed: the development work, its hosting on our ow
 
 **What it costs to run, once it works.** The build is the cost; the running of it is not. At pilot scale the service needs the machine's power backup and satellite connectivity, the machine itself written off over three years, the line's model calls at under one US cent a message, one refresh of the models a year, and hosting and domains: about 4,500 US dollars a year, 5,200 with 15 percent contingency. People in the field are a cost only while data is being produced; the Tonga desk only when new words are needed. A record, once the system exists, costs nothing to keep: at ten thousand animals the running cost is about fifty US cents an animal a year, at a hundred thousand a few cents.
 
-Each line is the upper end of what we expect, so that the total holds. Rates assumed: field staff at K6,000 to 20,000 a month by role, a field day at about K500 for meals and local transport, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
+Each line is the upper end of what we expect, so that the total holds. Rates assumed: field staff at K6,000 to 20,000 a month by role, a field day at about K500 per person for transport, food, airtime and a small allowance, with existing motorbikes and vehicles used at daily rates and nothing bought, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
 
 ## 4. The economics, an illustration
 
