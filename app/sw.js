@@ -1,7 +1,7 @@
 // Offline shell for the cattle demo. Install caches only the small shell, so the worker becomes active at once;
 // pictures and fonts are cached as they are used. Network first, so a new version arrives when there is signal.
 var BASE = new URL('./', self.location).pathname; // '/cattle-demo/' on zamai.pro, '/' on ngombe.zamai.pro
-var CACHE = 'cattle-demo-v63-' + BASE.replace(/\//g, '');
+var CACHE = 'cattle-demo-v64-' + BASE.replace(/\//g, '');
 var SHELL = [BASE, BASE + 'index.html', BASE + 'manifest.webmanifest', BASE + 'icon-192.png', BASE + 'icon-512.png'];
 var LATER = [BASE + 'icon-maskable-512.png', BASE + 'emblem.png',
   '/src/fonts/IBMPlexSans-400.woff2', '/src/fonts/IBMPlexSans-500.woff2',
