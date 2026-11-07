@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My herd · Ng'ombe</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1711">
+<link rel="icon" type="image/png" href="../icon-192.png">
+<style>
+  :root{--palm:#EDE3CC;--palm-2:#E2D5B6;--cream:#F8F4EA;--black:#1B1711;--ink-2:#4E463A;--grey:#8A8070;--line:#D5C9AE;--ochre:#B06E2E;--green:#145C4B;--white:#FFFDF8}
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-400.woff2) format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-500.woff2) format("woff2");font-weight:500;font-display:swap}
+  *{box-sizing:border-box} [hidden]{display:none!important}
+  body{margin:0;background:var(--cream);color:var(--black);font:16px/1.45 "IBM Plex Sans",-apple-system,"Segoe UI",system-ui,sans-serif}
+  header{background:var(--palm);padding:12px 16px;border-bottom:10px solid var(--black)}
+  header b{font-size:18px;font-weight:500} header .muted{display:block}
+  main{max-width:560px;margin:0 auto;padding:16px}
+  h1{font-size:24px;font-weight:500;margin:0 0 6px} h2{font-size:16px;font-weight:500;margin:16px 0 6px}
+  .muted{color:var(--grey);font-size:13.5px}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 10px}
+  .card.dark{background:var(--black);color:var(--cream);border-color:var(--black)} .card.dark .muted{color:#C9BFA9}
+  .card.alert{border-color:var(--ochre);background:#F7EBDD}
+  label{display:block;font-size:13.5px;color:var(--ink-2);margin:10px 0 4px}
+  input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--black)}
+  textarea{min-height:72px}
+  .btn{display:inline-block;font:inherit;font-weight:500;padding:12px 16px;border-radius:10px;border:1.5px solid var(--black);background:var(--white);color:var(--black);cursor:pointer;text-decoration:none;text-align:center}
+  .btn.green{background:var(--green);border-color:var(--green);color:#fff} .btn.ghost{background:transparent} .btn:disabled{opacity:.45}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .animal{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer}
+  .animal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block;background:var(--palm-2);margin:0 0 6px}
+  .animal .ph{width:100%;aspect-ratio:4/3;border-radius:8px;background:var(--palm-2);display:flex;align-items:center;justify-content:center;color:var(--grey);margin:0 0 6px}
+  .nm{font-weight:500} .cl{font-size:12.5px;color:var(--grey)}
+  .list{margin:0;padding:0;list-style:none} .list li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14.5px} .list li:last-child{border-bottom:0} .list .r{font-weight:500;text-align:right}
+  .status{font-size:13.5px;color:var(--ink-2);min-height:1.3em;margin-top:8px}
+  .terms{max-height:46vh;overflow:auto;font-size:14.5px;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+  .terms h3{font-size:15px;margin:10px 0 4px}
+  .code{font-size:34px;letter-spacing:.14em;font-weight:500;text-align:center;margin:8px 0}
+  nav.bottom{display:flex;gap:8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--black);position:sticky;bottom:0}
+  nav.bottom .btn{flex:1;background:transparent;color:var(--cream);border-color:var(--palm)} nav.bottom .btn.on{background:var(--palm);color:var(--black)}
+</style>
+</head>
+<body>
+<header><b>Ng'ombe · My herd</b><span class="muted" id="who">not signed in</span></header>
+<main>
+  <section id="s-loading"><p class="muted">Connecting to the records service…</p></section>
+
+  <section id="s-offline" hidden>
+    <div class="card alert"><b>The records service is not reachable right now.</b><p class="muted" style="margin:4px 0 0">The database runs on our own machine; when it is off, this page cannot save. The demo still works: <a href="../">open it</a>.</p></div>
+  </section>
+
+  <section id="s-profile" hidden>
+    <h1>Your profile</h1>
+    <p class="muted">A name and a place. Your phone number is tied to this profile in the next step, through the Zamai WhatsApp line, so that your number is you.</p>
+    <div class="card">
+      <label for="p-name">Your name</label><input id="p-name" maxlength="80" autocomplete="name">
+      <label for="p-place">Village or kraal</label><input id="p-place" maxlength="80">
+      <label for="p-district">District</label><input id="p-district" maxlength="60" placeholder="Choma, Pemba, Monze…">
+      <label for="p-role">You are</label><select id="p-role"><option value="owner">the owner of the animals</option><option value="herder">the herder</option><option value="both">both</option></select>
+      <div class="row"><button class="btn green" id="p-save">Continue</button><span class="status" id="p-status"></span></div>
+    </div>
+  </section>
+
+  <section id="s-terms" hidden>
+    <h1>The terms</h1>
+    <p class="muted">Read them once; version <span id="t-ver"></span>. In Tonga when the Tonga lines arrive.</p>
+    <div class="terms" id="t-text"></div>
+    <div class="row"><label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" id="t-ok" style="width:auto"> I have read the terms and I agree</label></div>
+    <div class="row"><button class="btn green" id="t-accept" disabled>Accept and continue</button><span class="status" id="t-status"></span></div>
+  </section>
+
+  <section id="s-phone" hidden>
+    <h1>Tie your number</h1>
+    <p class="muted">Send this code to the Zamai line on WhatsApp, from your own phone. When it arrives, your number is tied to this profile and the line knows your animals.</p>
+    <div class="card"><div class="code" id="ph-code">······</div><div class="row"><a class="btn green" id="ph-wa" href="#" target="_blank" rel="noopener">Open WhatsApp and send it</a><button class="btn ghost" id="ph-check">I have sent it</button></div><p class="status" id="ph-status"></p></div>
+    <p class="muted">The Zamai line: +260 776 621 255. The code is good for fifteen minutes. <a href="#" id="ph-skip">Do this later</a>.</p>
+  </section>
+
+  <section id="s-herd" hidden>
+    <h1>Your animals</h1>
+    <p class="muted" id="h-count"></p>
+    <div class="grid" id="h-grid"></div>
+    <div class="row"><button class="btn green" id="h-add">Add an animal</button></div>
+  </section>
+
+  <section id="s-animal" hidden>
+    <h1 id="a-title">New animal</h1>
+    <div class="card">
+      <label for="a-name">Name</label><input id="a-name" maxlength="60">
+      <label for="a-class">What it is</label>
+      <select id="a-class"><option value="calf">calf</option><option value="weaner">weaner</option><option value="heifer">heifer</option><option value="cow">cow</option><option value="bull">bull</option><option value="steer">steer</option><option value="ox">ox</option></select>
+      <label for="a-sex">Sex</label><select id="a-sex"><option value="">not said</option><option value="f">female</option><option value="m">male</option></select>
+      <label for="a-dobkind">Date of birth</label>
+      <select id="a-dobkind"><option value="witnessed">known, I saw it born</option><option value="owner_estimate">my estimate</option><option value="teeth">a year, from the teeth</option></select>
+      <input id="a-dob" type="date" style="margin-top:6px"><input id="a-year" type="number" min="1990" max="2100" placeholder="year" style="margin-top:6px" hidden>
+      <label for="a-dam">Mother</label><select id="a-dam"><option value="">not in the list</option></select>
+      <label for="a-sire">Sire</label><select id="a-sire"><option value="">not sure</option></select>
+      <label for="a-tag">Official tag, if there is one</label><input id="a-tag" maxlength="40" placeholder="leave empty if none">
+      <label for="a-colour">Colour or marks</label><input id="a-colour" maxlength="80">
+      <label for="a-notes">Note</label><textarea id="a-notes" maxlength="500"></textarea>
+      <label for="a-photo">Picture, side view</label><input id="a-photo" type="file" accept="image/*">
+      <div class="row"><button class="btn green" id="a-save">Save</button><button class="btn ghost" id="a-cancel">Cancel</button><span class="status" id="a-status"></span></div>
+    </div>
+  </section>
+
+  <section id="s-detail" hidden>
+    <h1 id="d-name"></h1>
+    <p class="muted" id="d-class"></p>
+    <img id="d-photo" alt="" style="width:100%;border-radius:12px;display:none;margin:0 0 10px">
+    <div class="card"><ul class="list" id="d-facts"></ul></div>
+    <h2>What was done</h2>
+    <div class="card"><ul class="list" id="d-events"></ul></div>
+    <div class="row">
+      <button class="btn" data-ev="dipped">Dipped</button><button class="btn" data-ev="vaccinated">Vaccinated</button>
+      <button class="btn" data-ev="weighed">Weighed</button><button class="btn" data-ev="note">Note</button>
+      <button class="btn ghost" id="d-photo-add">Add a picture</button>
+    </div>
+    <div class="row"><button class="btn green" id="d-sick">Report sick on WhatsApp</button><button class="btn ghost" id="d-back">Back</button></div>
+    <input id="d-photo-file" type="file" accept="image/*" hidden>
+    <p class="status" id="d-status"></p>
+  </section>
+
+  <section id="s-me" hidden>
+    <h1>You</h1>
+    <div class="card"><ul class="list" id="me-facts"></ul></div>
+    <div class="row"><a class="btn green" id="me-wa" href="https://wa.me/260776621255" target="_blank" rel="noopener">Chat with the Zamai line</a><button class="btn ghost" id="me-phone">Tie my number</button></div>
+    <div class="row"><button class="btn ghost" id="me-export">Download my records</button><a class="btn ghost" href="../">The demo</a></div>
+    <p class="muted" style="margin-top:12px">Not for profit for as long as it is used to promote smallholder cattle farming in Southern Province. Questions: chris@zamai.pro.</p>
+  </section>
+</main>
+<nav class="bottom" id="nav" hidden>
+  <button class="btn on" data-go="s-herd">Animals</button>
+  <button class="btn" data-go="s-me">You</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>
+(async function(){
+  var $=function(id){return document.getElementById(id)}; var S=document.querySelectorAll('main > section');
+  function show(id){S.forEach(function(s){s.hidden=s.id!==id}); window.scrollTo(0,0)}
+  function st(id,t){$(id).textContent=t||''}
+  var sb=null, me=null, profile=null, animals=[], terms=null, API=null;
+
+  // where is the backend today
+  try{
+    var r=await fetch('../api-url',{cache:'no-store'}); var j=await r.json();
+    if(!j.url||!j.anon) throw new Error('no backend');
+    API=j; sb=supabase.createClient(j.url,j.anon,{db:{schema:'cattle'},auth:{persistSession:true,storageKey:'ngombe-auth'}});
+    var ping=await fetch(j.url+'/rest/v1/terms?select=version&limit=1',{headers:{apikey:j.anon,'Accept-Profile':'cattle'},cache:'no-store'}); if(!ping.ok) throw new Error('backend down '+ping.status);
+  }catch(e){ show('s-offline'); return; }
+
+  // session: anonymous user, kept on this phone
+  var ses=(await sb.auth.getSession()).data.session;
+  if(!ses){ var a=await sb.auth.signInAnonymously(); if(a.error){ show('s-offline'); return; } ses=a.data.session; }
+  me=ses.user;
+
+  async function loadProfile(){ var q=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle(); profile=q.data||null;
+    $('who').textContent=profile?(profile.name+(profile.phone?' · '+profile.phone:' · number not tied')):'new profile'; }
+  async function loadTerms(){ var q=await sb.from('terms').select('*').eq('current',true).maybeSingle(); terms=q.data||null; }
+  async function loadAnimals(){ var q=await sb.from('animals').select('*').order('created_at'); animals=q.data||[]; }
+  async function route(){
+    await loadProfile(); await loadTerms();
+    if(!profile){ show('s-profile'); $('nav').hidden=true; return; }
+    if(terms&&profile.terms_version!==terms.version){ $('t-ver').textContent=terms.version; $('t-text').innerHTML=md(terms.en); show('s-terms'); $('nav').hidden=true; return; }
+    $('nav').hidden=false; await loadAnimals(); renderHerd(); show('s-herd');
+  }
+  function md(t){ return t.split('\n').map(function(l){ l=l.replace(/&/g,'&amp;').replace(/</g,'&lt;'); l=l.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); if(/^# /.test(l)) return '<h3>'+l.slice(2)+'</h3>'; if(/^\d+\. /.test(l)) return '<p>'+l+'</p>'; return l.trim()?'<p>'+l+'</p>':''; }).join(''); }
+
+  // profile
+  $('p-save').addEventListener('click',async function(){
+    var name=$('p-name').value.trim(); if(name.length<2){ st('p-status','Please write your name.'); return; }
+    st('p-status','Saving…');
+    var row={id:me.id,name:name,place:$('p-place').value.trim()||null,district:$('p-district').value.trim()||null,role:$('p-role').value};
+    var q=await sb.from('profiles').upsert(row); if(q.error){ st('p-status','Could not save: '+q.error.message); return; }
+    st('p-status',''); route();
+  });
+
+  // terms
+  $('t-ok').addEventListener('change',function(){ $('t-accept').disabled=!this.checked; });
+  $('t-accept').addEventListener('click',async function(){
+    st('t-status','Saving…'); var q=await sb.from('profiles').update({terms_version:terms.version,terms_accepted_at:new Date().toISOString()}).eq('id',me.id);
+    if(q.error){ st('t-status','Could not save: '+q.error.message); return; }
+    await loadProfile(); if(!profile.phone) startPhone(); else route();
+  });
+
+  // phone binding by code through the Zamai line
+  var code=null;
+  async function startPhone(){
+    code=String(Math.floor(100000+Math.random()*900000));
+    var q=await sb.from('phone_codes').insert({code:code,profile:me.id}); if(q.error){ st('ph-status','Could not make a code: '+q.error.message); }
+    $('ph-code').textContent=code; $('ph-wa').href='https://wa.me/260776621255?text='+encodeURIComponent('Ngombe '+code);
+    st('ph-status',''); $('nav').hidden=true; show('s-phone');
+  }
+  $('ph-check').addEventListener('click',async function(){
+    st('ph-status','Checking…');
+    try{ var r=await fetch('../bind',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,uid:me.id})}); var j=await r.json();
+      if(j.ok){ st('ph-status','Tied: '+j.phone); await loadProfile(); setTimeout(route,800); } else { await loadProfile(); if(profile&&profile.phone){ st('ph-status','Already tied: '+profile.phone); setTimeout(route,800); } else st('ph-status',j.message||'Not arrived yet. Send the code from your phone, then tap again.'); }
+    }catch(e){ st('ph-status','Could not check. Try again in a moment.'); }
+  });
+  $('ph-skip').addEventListener('click',function(e){ e.preventDefault(); route(); });
+  $('me-phone').addEventListener('click',startPhone);
+
+  // herd
+  function photoUrl(path){ return API.url+'/storage/v1/object/authenticated/cattle-photos/'+path; }
+  var photoCache={};
+  async function signed(path){ if(photoCache[path]) return photoCache[path]; var q=await sb.storage.from('cattle-photos').createSignedUrl(path,3600); if(q.data) photoCache[path]=q.data.signedUrl; return q.data?q.data.signedUrl:''; }
+  async function renderHerd(){
+    $('h-count').textContent=animals.length?animals.length+' animal'+(animals.length>1?'s':''):'No animals yet. Add the first one.';
+    var g=$('h-grid'); g.innerHTML='';
+    for(var i=0;i<animals.length;i++){ var a=animals[i]; var d=document.createElement('div'); d.className='animal'; d.setAttribute('data-id',a.id);
+      d.innerHTML='<div class="ph">no picture</div><div class="nm"></div><div class="cl"></div>'; d.querySelector('.nm').textContent=a.name; d.querySelector('.cl').textContent=a.class+(a.tag?' · '+a.tag:'');
+      g.appendChild(d);
+      (async function(d,a){ var p=await sb.from('photos').select('path').eq('animal',a.id).order('created_at',{ascending:false}).limit(1); if(p.data&&p.data[0]){ var u=await signed(p.data[0].path); if(u){ d.querySelector('.ph').outerHTML='<img src="'+u+'" alt="">'; } } })(d,a);
+    }
+  }
+  $('h-grid').addEventListener('click',function(e){ var el=e.target.closest('.animal'); if(el) openDetail(el.getAttribute('data-id')); });
+  $('h-add').addEventListener('click',function(){ $('a-title').textContent='New animal'; ['a-name','a-tag','a-colour','a-notes','a-dob','a-year'].forEach(function(id){$(id).value=''}); $('a-photo').value='';
+    fillParents(); show('s-animal'); });
+  function fillParents(){ var dam=$('a-dam'), sire=$('a-sire'); dam.innerHTML='<option value="">not in the list</option>'; sire.innerHTML='<option value="">not sure</option>';
+    animals.forEach(function(a){ if(a.class==='cow'||a.class==='heifer') dam.innerHTML+='<option value="'+a.id+'">'+a.name+'</option>'; if(a.class==='bull') sire.innerHTML+='<option value="'+a.id+'">'+a.name+'</option>'; }); }
+  $('a-dobkind').addEventListener('change',function(){ var teeth=this.value==='teeth'; $('a-dob').hidden=teeth; $('a-year').hidden=!teeth; });
+  $('a-cancel').addEventListener('click',function(){ show('s-herd'); });
+  async function sha256(file){ var buf=await file.arrayBuffer(); var h=await crypto.subtle.digest('SHA-256',buf); return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,'0')}).join(''); }
+  async function addPhoto(animalId,file,kind){ var hash=await sha256(file); var path=me.id+'/'+animalId+'/'+Date.now()+'.jpg';
+    var up=await sb.storage.from('cattle-photos').upload(path,file,{contentType:file.type||'image/jpeg'}); if(up.error) throw new Error(up.error.message);
+    var r=await sb.from('photos').insert({owner:me.id,animal:animalId,kind:kind||'side',path:path,sha256:hash,taken_at:new Date(file.lastModified||Date.now()).toISOString()}); if(r.error) throw new Error(r.error.message);
+    await sb.from('events').insert({owner:me.id,animal:animalId,kind:'photo',data:{path:path,sha256:hash},source:'app'}); return path; }
+  $('a-save').addEventListener('click',async function(){
+    var name=$('a-name').value.trim(); if(!name){ st('a-status','Give the animal a name.'); return; }
+    st('a-status','Saving…'); var kind=$('a-dobkind').value;
+    var row={owner:me.id,name:name,class:$('a-class').value,sex:$('a-sex').value||null,dob_kind:kind,dob:kind!=='teeth'&&$('a-dob').value?$('a-dob').value:null,dob_year:kind==='teeth'&&$('a-year').value?+$('a-year').value:null,
+      dam:$('a-dam').value||null,sire:$('a-sire').value||null,sire_kind:$('a-sire').value?'known':'unknown',tag:$('a-tag').value.trim()||null,colour:$('a-colour').value.trim()||null,notes:$('a-notes').value.trim()||null};
+    var q=await sb.from('animals').insert(row).select().single(); if(q.error){ st('a-status','Could not save: '+q.error.message); return; }
+    await sb.from('events').insert({owner:me.id,animal:q.data.id,kind:'registered',data:{class:row.class,dob_kind:kind},source:'app'});
+    var f=$('a-photo').files[0]; if(f){ st('a-status','Saving the picture…'); try{ await addPhoto(q.data.id,f,'side'); }catch(e){ st('a-status','Saved, but the picture failed: '+e.message); } }
+    await loadAnimals(); renderHerd(); st('a-status',''); show('s-herd');
+  });
+
+  // detail
+  var cur=null;
+  async function openDetail(id){ cur=animals.find(function(a){return a.id===id}); if(!cur) return;
+    $('d-name').textContent=cur.name; $('d-class').textContent=cur.class+(cur.sex?' · '+(cur.sex==='f'?'female':'male'):'')+(cur.tag?' · tag '+cur.tag:'');
+    var born=cur.dob?(cur.dob+(cur.dob_kind==='witnessed'?' · seen born':' · owner estimate')):(cur.dob_year?('about '+cur.dob_year+' · by teeth'):'not recorded');
+    var dam=animals.find(function(a){return a.id===cur.dam}), sire=animals.find(function(a){return a.id===cur.sire});
+    var facts=[['Born',born],['Mother',dam?dam.name:'not in the list'],['Sire',sire?sire.name:'not sure'],['Colour',cur.colour||''],['Note',cur.notes||'']].filter(function(x){return x[1]});
+    $('d-facts').innerHTML=facts.map(function(x){return '<li><span>'+x[0]+'</span><span class="r">'+esc(x[1])+'</span></li>'}).join('');
+    var ph=$('d-photo'); ph.style.display='none'; var p=await sb.from('photos').select('path').eq('animal',cur.id).order('created_at',{ascending:false}).limit(1); if(p.data&&p.data[0]){ var u=await signed(p.data[0].path); if(u){ ph.src=u; ph.style.display='block'; } }
+    var ev=await sb.from('events').select('kind,at,data,source').eq('animal',cur.id).order('id',{ascending:false}).limit(30);
+    $('d-events').innerHTML=(ev.data||[]).map(function(e){ return '<li><span>'+esc(e.kind.replace('_',' ')+(e.data&&e.data.note?': '+e.data.note:'')+(e.data&&e.data.kg?': '+e.data.kg+' kg':''))+'</span><span class="r">'+new Date(e.at).toLocaleDateString()+'</span></li>'; }).join('')||'<li><span class="muted">nothing yet</span></li>';
+    $('d-sick').onclick=function(){ var t=prompt('What do you see on '+cur.name+'? For example: limping since yesterday, not eating. The line files it on '+cur.name+'.'); if(!t||!t.trim()) return; window.open('https://wa.me/260776621255?text='+encodeURIComponent(cur.name+': '+t.trim()),'_blank'); };
+    st('d-status',''); show('s-detail');
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  document.querySelectorAll('#s-detail [data-ev]').forEach(function(b){ b.addEventListener('click',async function(){ var kind=this.getAttribute('data-ev'); var data={};
+    if(kind==='weighed'){ var kg=prompt('Weight in kg'); if(!kg) return; data.kg=+kg; } if(kind==='note'){ var n=prompt('Note'); if(!n) return; data.note=n; }
+    st('d-status','Saving…'); var q=await sb.from('events').insert({owner:me.id,animal:cur.id,kind:kind,data:data,source:'app'}); st('d-status',q.error?('Could not save: '+q.error.message):''); if(!q.error) openDetail(cur.id); }); });
+  $('d-photo-add').addEventListener('click',function(){ $('d-photo-file').click(); });
+  $('d-photo-file').addEventListener('change',async function(){ var f=this.files[0]; if(!f) return; st('d-status','Saving the picture…'); try{ await addPhoto(cur.id,f,'side'); delete photoCache; photoCache={}; st('d-status',''); openDetail(cur.id); }catch(e){ st('d-status','The picture failed: '+e.message); } this.value=''; });
+  $('d-back').addEventListener('click',function(){ renderHerd(); show('s-herd'); });
+
+  // me
+  document.querySelectorAll('#nav [data-go]').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('#nav .btn').forEach(function(x){x.classList.remove('on')}); this.classList.add('on'); var id=this.getAttribute('data-go'); if(id==='s-me') renderMe(); show(id); }); });
+  function renderMe(){ $('me-facts').innerHTML=[['Name',profile.name],['Place',(profile.place||'')+(profile.district?', '+profile.district:'')],['Number',profile.phone||'not tied yet'],['Terms',profile.terms_version?('version '+profile.terms_version+', accepted'):'not accepted'],['Animals',String(animals.length)]].map(function(x){return '<li><span>'+x[0]+'</span><span class="r">'+esc(x[1])+'</span></li>'}).join(''); }
+  $('me-export').addEventListener('click',async function(){ var ev=await sb.from('events').select('*').order('id'); var ph=await sb.from('photos').select('*'); var blob=new Blob([JSON.stringify({profile:profile,animals:animals,photos:ph.data||[],events:ev.data||[]},null,1)],{type:'application/json'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ngombe-my-records.json'; a.click(); });
+
+  route();
+})();
+</script>
+</body>
+</html>

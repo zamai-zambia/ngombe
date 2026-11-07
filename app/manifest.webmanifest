@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "Ng'ombe: a recorded herd (Zamai)",
+  "short_name": "Ng'ombe",
+  "description": "A guided demonstration of cattle records apps for Southern Province, in Tonga and English.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F4EA",
+  "theme_color": "#1B1711",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

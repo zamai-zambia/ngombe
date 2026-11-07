@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Lindinger;Christoph;;;
+FN:Christoph Lindinger
+ORG:Yumi Milling Ltd;Zamai Solutions
+TITLE:Director
+EMAIL;TYPE=INTERNET:chris@zamai.pro
+TEL;TYPE=CELL,VOICE:+260962653100
+TEL;TYPE=WORK:+260776621255
+URL:https://ngombe.zamai.pro
+ADR;TYPE=WORK:;;Batoka;Choma;Southern Province;;Zambia
+END:VCARD

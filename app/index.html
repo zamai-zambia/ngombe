@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ng'ombe: a recorded herd, one week</title>
+<meta name="description" content="A guided demonstration of a cattle records app for Southern Province, in Tonga and English. One herd, one week, tap by tap.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1711">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Ng'ombe">
+<link rel="preload" href="/src/fonts/IBMPlexSans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/src/fonts/IBMPlexSans-500.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-500.woff2) format("woff2");font-weight:500;font-style:normal;font-display:swap}
+  :root{
+    --palm:#EDE3CC;--palm-2:#E2D5B6;--cream:#F8F4EA;--black:#1B1711;--ink-2:#4E463A;--grey:#8A8070;--line:#D5C9AE;
+    --ochre:#B06E2E;--green:#145C4B;--green-2:#0E4A3F;--white:#FFFDF8;
+    --sans:"IBM Plex Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;background:var(--palm);font-family:var(--sans);color:var(--black);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit}
+
+  /* stage: phone frame on wide screens, full screen on phones */
+  .stage{min-height:100%;display:grid;place-items:center;padding:28px 16px;background:
+    repeating-linear-gradient(135deg,transparent 0 22px,rgba(27,23,17,.045) 22px 24px),
+    repeating-linear-gradient(45deg,transparent 0 22px,rgba(27,23,17,.045) 22px 24px),var(--palm)}
+  .phone{width:390px;height:800px;background:var(--cream);border-radius:34px;box-shadow:0 30px 60px -30px rgba(27,23,17,.5),0 0 0 10px var(--black),0 0 0 11px #3a3128;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  @media (max-width:560px),(max-height:860px){
+    .stage{padding:0;place-items:stretch}
+    .phone{width:100%;height:100dvh;border-radius:0;box-shadow:none}
+  }
+  .desk{position:fixed;left:24px;bottom:20px;font-size:13px;color:var(--ink-2);max-width:300px;line-height:1.45}
+  .desk b{font-weight:500}
+  @media (max-width:980px){.desk{display:none}}
+
+  /* chevron band: the one motif */
+  .band{height:10px;background-color:var(--black);background-image:linear-gradient(135deg,var(--palm) 25%,transparent 25%),linear-gradient(225deg,var(--palm) 25%,transparent 25%);background-size:20px 20px;background-position:0 0,0 0;background-repeat:repeat-x;flex:none}
+  .band.light{background-color:var(--palm-2);background-image:linear-gradient(135deg,var(--black) 25%,transparent 25%),linear-gradient(225deg,var(--black) 25%,transparent 25%)}
+
+  /* app chrome */
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;background:var(--cream);flex:none}
+  .top .herd{font-weight:500;font-size:17px;letter-spacing:.01em}
+  .top .herd small{display:block;font-weight:400;font-size:12.5px;color:var(--grey)}
+  .lang{display:inline-flex;border:1.5px solid var(--black);border-radius:6px;overflow:hidden}
+  .lang button{border:0;background:transparent;padding:6px 10px;font-size:13px;font-weight:500;cursor:pointer;min-width:44px}
+  .lang button[aria-pressed="true"]{background:var(--black);color:var(--cream)}
+
+  .screen{flex:1;overflow:auto;padding:18px 18px 12px;display:none}
+  .screen.on{display:block}
+  h1{font-weight:500;font-size:26px;line-height:1.15;margin:0 0 10px;letter-spacing:-.01em}
+  h2{font-weight:500;font-size:18px;margin:18px 0 8px}
+  p{margin:0 0 10px}
+  .muted{color:var(--grey);font-size:13.5px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.03em;padding:2px 7px;border-radius:4px;background:var(--palm-2);color:var(--ink-2);vertical-align:middle}
+  .tag.urgent{background:var(--ochre);color:var(--white)}
+  .tag.ok{background:var(--green);color:var(--white)}
+
+  /* herd grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .animal{border:1.5px solid var(--line);border-radius:12px;padding:10px 8px 8px;background:var(--white);text-align:center;cursor:pointer;position:relative;min-height:104px}
+  .animal.sel{border-color:var(--black);box-shadow:inset 0 0 0 1px var(--black)}
+  .animal svg{width:56px;height:40px;display:block;margin:0 auto 6px}
+  .animal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block;margin:0 0 6px;background:var(--palm-2)}
+  .animal .nm{font-size:13.5px;font-weight:500;line-height:1.2}
+  .animal .cl{font-size:11.5px;color:var(--grey)}
+  .animal .dot{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--green)}
+  .animal .dot.sick{background:var(--ochre)}
+  .animal .dot.new{background:var(--black)}
+  .animal.add{border-style:dashed;display:grid;place-items:center;font-weight:500;color:var(--ink-2)}
+  .animal.add span{font-size:34px;line-height:1;font-weight:400}
+
+  /* big tap buttons */
+  .taps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}
+  .tap{border:1.5px solid var(--line);border-radius:12px;background:var(--white);padding:14px 10px;text-align:center;cursor:pointer;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px}
+  .tap svg{width:30px;height:30px}
+  .tap[aria-pressed="true"]{border-color:var(--black);background:var(--black);color:var(--cream)}
+  .tap[aria-pressed="true"] svg{stroke:var(--cream)}
+  svg.i{fill:none;stroke:var(--black);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--black);border-radius:10px;background:var(--black);color:var(--cream);padding:12px 18px;font-weight:500;font-size:15px;cursor:pointer;min-height:46px}
+  .btn.ghost{background:transparent;color:var(--black)}
+  .btn.green{background:var(--green);border-color:var(--green)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  .card{border:1.5px solid var(--line);border-radius:12px;background:var(--white);padding:14px;margin:0 0 12px}
+  .card.alert{border-color:var(--ochre)}
+  .card.dark{background:var(--black);color:var(--cream);border-color:var(--black)}
+  .card.dark .muted{color:#C9BFA9}
+  .list{margin:0;padding:0;list-style:none}
+  .list li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .list li:last-child{border-bottom:0}
+  .list li .r{font-weight:500;white-space:nowrap}
+  .list li .r.tag{align-self:flex-start;font-weight:500}
+  .check{color:var(--green);font-weight:500}
+
+  .msg{border-radius:14px;padding:11px 13px;margin:0 0 8px;max-width:90%;font-size:14.5px;line-height:1.4}
+  .msg.in{background:var(--palm-2)}
+  .msg.vet{background:var(--green);color:var(--white);margin-left:auto}
+  .msg .who{display:block;font-size:11.5px;opacity:.75;margin-bottom:3px}
+  .msg.me{background:var(--green);color:var(--white);margin-left:auto}
+  .msg.sys{background:transparent;border:1px dashed var(--line);color:var(--ink-2);font-size:12.5px;max-width:100%;padding:8px 11px}
+  .msg.esc{background:var(--ochre);color:var(--white);max-width:100%}
+  .msg.esc .who{opacity:.9}
+
+  .big{font-size:38px;font-weight:500;letter-spacing:-.02em;line-height:1;margin:2px 0 4px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
+  .kpi{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:7px 8px}
+  .kpi b{display:block;font-size:19px;font-weight:500;letter-spacing:-.01em;line-height:1.1}
+  .kpi span{display:block;font-size:11px;color:var(--grey);line-height:1.25;margin-top:2px}
+  .kpi.warn b{color:var(--ochre)}
+  .tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:0 0 6px}
+  .tbl th{font-weight:500;color:var(--grey);text-align:right;padding:3px 4px;border-bottom:1px solid var(--line);font-size:11px}
+  .tbl th:first-child,.tbl td:first-child{text-align:left;padding-left:0}
+  .tbl td{text-align:right;padding:4px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl .w{color:var(--ochre);font-weight:500}
+  .tbl .g{color:var(--green);font-weight:500}
+  .tbl td.x{white-space:normal;text-align:left;font-size:12px;line-height:1.3}
+  .mini{display:inline-block;height:9px;background:var(--green);border-radius:2px;vertical-align:middle;margin-right:4px}
+  h2.sec{font-size:13px;letter-spacing:.02em;text-transform:uppercase;color:var(--grey);margin:14px 0 6px;font-weight:500}
+  .stat{border-top:1.5px solid var(--black);padding:10px 0 6px}
+  .stat .muted{font-size:13px}
+
+  .bars .b{display:grid;grid-template-columns:110px 1fr 64px;gap:8px;align-items:center;font-size:13.5px;margin:0 0 8px}
+  .bars .bar{height:16px;background:var(--palm-2);border-radius:3px;position:relative;overflow:hidden}
+  .bars .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--green)}
+  .bars .b.me .bar i{background:var(--ochre)}
+  .bars .r{text-align:right;font-weight:500}
+
+  /* narrator */
+  .nar{flex:none;background:var(--black);color:var(--cream);padding:12px 16px 14px}
+  .nar .steps{display:flex;gap:6px;margin:0 0 8px}
+  .nar .steps i{width:9px;height:9px;transform:rotate(45deg);border:1.5px solid var(--palm);display:block;opacity:.55}
+  .nar .steps i.done{background:var(--palm);opacity:1}
+  .nar .steps i.cur{background:var(--ochre);border-color:var(--ochre);opacity:1}
+  .nar p{font-size:14.5px;line-height:1.4;margin:0 0 10px;min-height:40px}
+  .nar .row{justify-content:space-between}
+  .nar .btn{background:var(--palm);color:var(--black);border-color:var(--palm);padding:10px 16px;min-height:42px;font-size:14.5px}
+  .nar .btn.ghost{background:transparent;color:var(--palm)}
+  .nar .guide{font-size:12px;color:#C9BFA9;margin-left:auto;background:none;border:0;cursor:pointer;text-decoration:underline;padding:0}
+
+  .pend{display:none;background:var(--ochre);color:var(--white);font-size:12px;padding:6px 18px;flex:none}
+  .pend.on{display:block}
+
+  /* map */
+  .map{width:100%;height:auto;display:block;border:1.5px solid var(--line);border-radius:12px;background:var(--white)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone" id="app">
+    <div class="top">
+      <div class="herd"><span id="hdr" data-t="app.name">Ng'ombe</span><small id="hdr2" data-t="app.place">Pemba, Southern Province</small></div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="to" aria-pressed="false">Tonga</button>
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+      </div>
+    </div>
+    <div class="band"></div>
+    <div class="pend" id="pend"></div>
+
+    <!-- 0 welcome -->
+    <section class="screen on" id="s0">
+      <h1 data-t="s0.title">Eleven million cattle. A billion dollars of beef a year.</h1>
+      <p data-t="s0.p1">That is the Grow Zambia cattle goal for 2031. Exports do not buy a herd count. They buy proof, animal by animal: where it was born, what it ate, what it was treated with, where it has been, and that it was never where disease was.</p>
+      <p data-t="s0.p2">This demo shows how that proof gets made, from one herd near Pemba to a carcass in Choma, and what it unlocks on the way.</p>
+      <div style="margin:10px auto 10px;max-width:220px"><img src="emblem.png" alt="" style="width:100%;height:auto;display:block"></div>
+      <div class="row"><button class="btn" id="shorttour" data-t="s0.start">The short tour · 12 stops</button><button class="btn ghost" id="fullwalk0" data-t="s0.full">The full walk · 28</button><button class="btn ghost" data-go="sH" data-t="s0.plan">Straight to the plan</button><button class="btn green" id="installbtn" style="display:none" data-t="s0.install">Install on this phone</button></div>
+      <p class="muted" style="margin-top:12px"><a href="spec-sheet.html" target="_blank" rel="noopener" style="color:var(--green);font-weight:500" data-t="s0.spec">What would be needed: the spec sheet, with the open questions and the options</a> · <a href="spec-sheet.pdf" download style="color:var(--green)" data-t="s0.specpdf">PDF</a> · <a href="concept-note.pdf" download style="color:var(--green);font-weight:500" data-t="s0.note">The concept note (PDF), to print and hand over</a></p>
+    </section>
+
+    <!-- A the approach -->
+    <section class="screen" id="sA">
+      <h1 data-t="a.title">One animal, one record</h1>
+      <p data-t="a.p1">The approach is quality data on the individual animal, kept from birth to carcass. Not a district count. Five things, every time, the same way.</p>
+      <ul class="list" style="margin-bottom:12px">
+        <li><span data-t="a.l1">Picture, standard angle</span><span class="r" data-t="a.r1">what it looks like</span></li>
+        <li><span data-t="a.l2">Weight and condition</span><span class="r" data-t="a.r2">what it is worth</span></li>
+        <li><span data-t="a.l3">Health, treatments, vaccinations</span><span class="r" data-t="a.r3">what was done</span></li>
+        <li><span data-t="a.l4">Movements, with dates</span><span class="r" data-t="a.r4">where it has been</span></li>
+        <li><span data-t="a.l5">Carcass weight and grade</span><span class="r" data-t="a.r5">what it became</span></li>
+      </ul>
+      <p data-t="a.p2">Everything an export market asks for is in that list. So is everything a farmer, a vet, a trader and a bank need. The same record serves all of them, which is why it can be kept.</p>
+      <p class="muted" data-t="a.p3">The records are held by the system under terms the owner accepts at registration. The owner sees and corrects their own animals' records and has a say over who else sees them.</p>
+    </section>
+
+    <!-- B what it unlocks -->
+    <section class="screen" id="sB">
+      <h1 data-t="b.title">What it unlocks, if done right</h1>
+      <div class="card"><b data-t="b.1">Export, animal by animal</b><p class="muted" style="margin:4px 0 0" data-t="b.1b">Today one outbreak closes a whole district. With a movement record, the clean animal from the clean kraal still sells, because it can prove where it was not.</p></div>
+      <div class="card"><b data-t="b.2">A fair price</b><p class="muted" style="margin:4px 0 0" data-t="b.2b">Weight and condition known before the trader arrives. What steers like this fetched nearby this month. The farmer bargains with the number in hand.</p></div>
+      <div class="card"><b data-t="b.3">Disease stopped early</b><p class="muted" style="margin:4px 0 0" data-t="b.3b">Sick reports with place and date cluster on a map days before an outbreak is declared. A vet sees the cluster; a camp officer vaccinates round it.</p></div>
+      <div class="card"><b data-t="b.4">Cattle that banks can see</b><p class="muted" style="margin:4px 0 0" data-t="b.4b">A recorded, vaccinated, traceable animal is an asset that can be insured and lent against. Fourteen billion kwacha of living capital in Southern Province alone, almost none of it bankable today.</p></div>
+      <div class="card"><b data-t="b.5">Breeding on outcomes</b><p class="muted" style="margin:4px 0 0" data-t="b.5b">When pictures are paired with weights and carcasses, selection stops being guesswork. The breeder's method, at the scale of a province.</p></div>
+    </section>
+
+    <!-- C the passport with the export check -->
+    <section class="screen" id="sC">
+      <h1 data-t="c.title">Where it has been</h1>
+      <p class="muted" data-t="c.p1">Mwiinga, steer, ID ZM-SP-0417. Every movement, with a date. This is the export question answered.</p>
+      <svg class="map" viewBox="0 0 340 230" role="img" aria-label="Movement history on a map with a restricted zone far from the animal's path">
+        <g fill="none" stroke="#D5C9AE" stroke-width="1"><path d="M20 60 C80 40 140 70 200 50 S300 60 330 40"/><path d="M10 150 C70 140 120 170 190 150 S280 160 335 140"/></g>
+        <g font-family="IBM Plex Sans, Helvetica, Arial, sans-serif" font-size="11" fill="#4E463A">
+          <path d="M20 170 l60 -20 l30 40 l-70 25 z" fill="#B06E2E" fill-opacity=".18" stroke="#B06E2E" stroke-dasharray="4 3"/>
+          <text x="22" y="226" fill="#8E4A1C">Restricted zone, Mar 2026</text>
+          <path d="M250 70 L178 155 L286 150 L300 185" fill="none" stroke="#145C4B" stroke-width="2"/>
+          <circle cx="250" cy="70" r="6" fill="#145C4B"/><text x="226" y="60">Born, Pemba 2023</text>
+          <circle cx="178" cy="155" r="6" fill="#145C4B"/><text x="118" y="178">Siamundele dip tank</text>
+          <circle cx="286" cy="150" r="6" fill="#145C4B"/><text x="262" y="140">Feedlot</text>
+          <circle cx="300" cy="185" r="6" fill="#145C4B"/><text x="248" y="206">Abattoir, Choma</text>
+        </g>
+      </svg>
+      <div class="card" style="margin-top:12px;border-color:#145C4B"><span class="tag ok" data-t="c.ok">Records ready for veterinary export review</span> <b data-t="c.v">Never in a restricted zone. Vaccinated. Ninety days traceable.</b>
+        <p class="muted" style="margin:6px 0 0" data-t="c.v2">The same check fails, and says why, for an animal that passed through the zone in March. The district is not blocked. The animal is.</p></div>
+      <p class="muted" data-t="c.p2">Movements come from the dip tank, the sale pen, the feedlot gate and the abattoir, each already a place the animal passes. Illustrative map.</p>
+    </section>
+
+    <!-- 1 herd -->
+    <section class="screen" id="s1">
+      <h1 data-t="s1.title">The herd</h1>
+      <p class="muted"><span data-t="s1.count">10 animals</span> · <span class="tag ok" data-t="s1.ok">all dipped this week</span></p>
+      <div class="grid" id="herd"></div>
+    </section>
+
+    <!-- D one animal -->
+    <section class="screen" id="sD">
+      <img id="dphoto" src="" alt="" style="display:block;width:100%;border-radius:12px;margin:0 0 10px">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><h1 id="dname" style="margin:0"></h1><span class="tag" id="dstatus"></span></div>
+      <p class="muted" id="dclass" style="margin:2px 0 12px"></p>
+      <div class="card">
+        <ul class="list" id="dfacts"></ul>
+      </div>
+      <h2 data-t="d.events">What was done</h2>
+      <div class="card"><ul class="list" id="devents"></ul></div>
+      <div class="row" style="margin-top:4px"><button class="btn" data-go="s3" data-t="d.sick">Report sick</button><button class="btn ghost" data-go="sC" data-t="d.where">Where it has been</button><button class="btn ghost" data-go="s7" data-t="d.sell">Sell</button></div>
+    </section>
+
+    <!-- 2 register -->
+    <section class="screen" id="s2">
+      <h1 data-t="s2.title">New calf</h1>
+      <p class="muted" data-t="s2.p1">Born this morning to Nkuku. A photo, a name, two taps.</p>
+      <div class="card" id="photo" style="text-align:center;cursor:pointer;padding:8px">
+        <img src="photos/k2.jpg" alt="" style="display:block;width:100%;border-radius:8px">
+        <div class="muted" style="margin-top:6px" data-t="s2.photo">Tap to take the photo</div>
+      </div>
+      <h2 data-t="s2.sex">Sex</h2>
+      <div class="taps" data-group="sex">
+        <button class="tap" type="button" aria-pressed="false" data-t="s2.female">Female</button>
+        <button class="tap" type="button" aria-pressed="false" data-t="s2.male">Male</button>
+      </div>
+      <h2 data-t="s2.mother">Mother</h2>
+      <div class="taps" data-group="mother" style="grid-template-columns:repeat(3,1fr)">
+        <button class="tap" type="button" aria-pressed="true">Nkuku</button>
+        <button class="tap" type="button" aria-pressed="false">Choolwe</button>
+        <button class="tap" type="button" aria-pressed="false">Luumuno</button>
+      </div>
+      <h2 data-t="s2.sire">Sire</h2>
+      <div class="taps" data-group="sire" style="grid-template-columns:repeat(2,1fr)">
+        <button class="tap" type="button" aria-pressed="true">Mulonga <span class="muted" data-t="s2.sire1">· own bull</span></button>
+        <button class="tap" type="button" aria-pressed="false">Simoonga <span class="muted" data-t="s2.sire2">· own bull</span></button>
+        <button class="tap" type="button" aria-pressed="false" data-t="s2.sire3">Another bull</button>
+        <button class="tap" type="button" aria-pressed="false" data-t="s2.sire4">Not sure</button>
+      </div>
+      <p class="muted" style="margin:0 0 10px" data-t="s2.sirenote">The owner usually knows which bull served his cows; the bulls come from the bull register. Where herds mix and he is not sure, the record keeps the bulls that were with the herd that season, and as the calf grows its pictures narrow it down. Every sire entry is marked known or inferred.</p>
+      <p class="muted" style="margin:4px 0 12px"><span data-t="s2.born">Born today</span> · <span data-t="s2.bornwhere">Pemba, in the kraal</span></p>
+      <div class="row"><button class="btn green" id="reg" data-t="s2.save">Save the calf</button><span class="muted" id="regdone" style="display:none" data-t="s2.saved">Saved. Eleven animals.</span></div>
+    </section>
+
+    <!-- 3 sick report -->
+    <section class="screen" id="s3">
+      <h1 data-t="s3.title">Morning report</h1>
+      <img src="photos/a5.jpg" alt="" style="display:block;width:100%;border-radius:12px;margin:0 0 10px"><p class="muted" data-t="s3.p1">Mweemba, the herder, six o'clock. Chipego the heifer is coughing and did not eat.</p>
+      <h2 data-t="s3.signs">What do you see?</h2>
+      <div class="taps" data-group="signs" data-multi="1">
+        <button class="tap" type="button" aria-pressed="false" data-sign="cough"><svg class="i" viewBox="0 0 24 24"><path d="M4 14c3-6 13-6 16 0M8 10v-3M12 9V5M16 10V7"/></svg><span data-t="s3.cough">Coughing</span></button>
+        <button class="tap" type="button" aria-pressed="false" data-sign="noeat"><svg class="i" viewBox="0 0 24 24"><path d="M5 19 19 5M7 7h4v4M13 13h4v4"/></svg><span data-t="s3.noeat">Not eating</span></button>
+        <button class="tap" type="button" aria-pressed="false" data-sign="limp"><svg class="i" viewBox="0 0 24 24"><path d="M8 4v8l-3 8M8 12l4 4 2 4M12 4v4"/></svg><span data-t="s3.limp">Limping</span></button>
+        <button class="tap" type="button" aria-pressed="false" data-sign="down"><svg class="i" viewBox="0 0 24 24"><path d="M3 18h18M6 18V9h12v9M9 9V6h6v3"/></svg><span data-t="s3.down">Lying down</span></button>
+        <button class="tap" type="button" aria-pressed="false" data-sign="dead"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h16M6 20V8l6-4 6 4v12M10 20v-6h4v6"/></svg><span data-t="s3.dead">Found dead</span></button>
+      </div>
+      <div class="card alert" id="deadrule" style="display:none"><b data-t="s3.deadrule">Do not open or move the carcass. Keep people and dogs away. Report now.</b><p class="muted" style="margin:4px 0 0" data-t="s3.deadrule2">Sudden death with blood from the nose or mouth can be anthrax, which kills people. The report goes to the vet at once, ahead of any cluster rule.</p></div>
+      <div class="card alert" id="urgent" style="display:none">
+        <b data-t="s3.urgent">Call the vet today.</b>
+        <p class="muted" style="margin:4px 0 0" data-t="s3.urgent2">Cough and not eating together are an urgent sign. Dr Moonga, Choma: 097 000 0000. The report, the photo and the heifer's history are sent now.</p>
+      </div>
+      <div class="msg in" style="margin-top:6px"><span class="who" data-t="s3.wa">Or on WhatsApp, the same morning</span><span data-t="s3.wa2">A photo and "Chipego coughing, not eating since yesterday". The system makes the same entry from the message and asks one question if something is missing.</span></div>
+      <p class="muted" data-t="s3.nodx">The app never diagnoses. It sorts by urgency and sends.</p>
+      <div class="row"><button class="btn ghost" data-go="sW" data-t="s3.seechat">See the chat</button></div>
+    </section>
+
+    <!-- W the WhatsApp chat -->
+    <section class="screen" id="sW">
+      <h1 data-t="w.title">The same report, on WhatsApp</h1>
+      <div class="msg sys"><span data-t="w.sys0">This number is registered to Mweemba, herder, Mutinta's herd, Pemba. His rights, no password.</span></div>
+      <div class="msg me"><span class="who" data-t="w.h1who">Mweemba · 06:04</span><img src="photos/a5.jpg" alt="" style="display:block;width:100%;border-radius:8px;margin:2px 0 8px"><span data-t="w.h1">Chipego coughing, not eating since yesterday</span></div>
+      <div class="msg in"><span class="who" data-t="w.z1who">Zamai · 06:04</span><span data-t="w.z1">Got it, Mweemba. I read this as a sick report. Animal: Chipego, heifer, 2 years, Mutinta's herd, Pemba. Signs: coughing, not eating since Thursday. Is that right? Reply 1 for yes, 2 to change something.</span></div>
+      <div class="msg me"><span class="who" data-t="w.h2who">Mweemba · 06:05</span><span data-t="w.h2">1</span></div>
+      <div class="msg in"><span class="who" data-t="w.z2who">Zamai · 06:05</span><span data-t="w.z2">One more question. Is any other animal in the kraal coughing or not eating?</span></div>
+      <div class="msg me"><span class="who" data-t="w.h3who">Mweemba · 06:06</span><span data-t="w.h3">No only her. She was at Siamundele dip on Tuesday</span></div>
+      <div class="msg in"><span class="who" data-t="w.z3who">Zamai · 06:06</span><span data-t="w.z3">Thank you. Report 0417 is filed, with you as the one who saw it, the photo and the time. It goes to Dr Moonga in Choma now, with Chipego's record. Until the vet answers: keep her apart from the herd, water in the shade, do not move or sell any animal. Dr Moonga's reply comes to you here.</span></div>
+      <button class="msg sys" type="button" id="rep0417" style="display:block;width:100%;text-align:left;font:inherit;cursor:pointer;font-size:12.5px"><span data-t="w.sys1">Report 0417 · 06:06 · seen by Mweemba · Chipego · last dip Siamundele, Tuesday 3 Nov · sent to Dr Moonga</span> <span style="color:var(--green);font-weight:500" data-t="w.rep.open">· open the report</span></button>
+      <div class="card" id="rep0417card" style="display:none">
+        <b data-t="w.rep.title">Report 0417 · sick report · as filed</b>
+        <ul class="list" style="margin-top:6px">
+          <li><span data-t="w.rep.k1">Filed</span><span class="r" data-t="w.rep.v1">06:06 · from WhatsApp</span></li>
+          <li><span data-t="w.rep.k2">Seen by</span><span class="r" data-t="w.rep.v2">Mweemba · herder · his number</span></li>
+          <li><span data-t="w.rep.k3">Animal</span><span class="r" data-t="w.rep.v3">Chipego · ZM-SP-0416 · heifer, 2 y</span></li>
+          <li><span data-t="w.rep.k4">Owner · herd</span><span class="r" data-t="w.rep.v4">Mutinta · Pemba</span></li>
+          <li><span data-t="w.rep.k5">Signs</span><span class="r" data-t="w.rep.v5">coughing · not eating since Thu</span></li>
+          <li><span data-t="w.rep.k6">Other animals</span><span class="r" data-t="w.rep.v6">none reported</span></li>
+          <li><span data-t="w.rep.k7">Last dip</span><span class="r" data-t="w.rep.v7">Siamundele · Tue 3 Nov</span></li>
+          <li><span data-t="w.rep.k8">Place</span><span class="r" data-t="w.rep.v8">Mutinta's kraal · phone GPS</span></li>
+          <li><span data-t="w.rep.k9">Photo</span><span class="r" data-t="w.rep.v9">1 · hash 9f3a…c21e</span></li>
+          <li><span data-t="w.rep.k10">Record hash · previous</span><span class="r" data-t="w.rep.v10">a1c4…7d09 · 77e0…b3f2</span></li>
+          <li><span data-t="w.rep.k11">Sent to</span><span class="r" data-t="w.rep.v11">Dr Moonga 06:06 · DVO Choma 06:06</span></li>
+          <li><span data-t="w.rep.k12">Status</span><span class="r" data-t="w.rep.v12">open · awaiting the vet</span></li>
+          <li><span data-t="w.rep.k13">Row visible to</span><span class="r" data-t="w.rep.v13">herder · owner · vet · ministry (counts)</span></li>
+        </ul>
+        <p class="muted" style="margin:8px 0 0" data-t="w.rep.note">Nothing in this report is written by hand. The time and the number come from the message, the animal and the herd from the register, the place from the phone, the dip from the dip-day entry. The hash chain means the row cannot be changed later without it showing.</p>
+      </div>
+      <div class="msg esc"><span class="who" data-t="w.escwho">To the district veterinary officer, Choma · 06:06 · sent at the same time</span><span data-t="w.esc">Third report in six days of coughing and not eating from herds that use Siamundele dip tank: reports 0402, 0409 and 0417, three kraals within four kilometres. All three animals were dipped there on Tuesday 3 November. Photos and the animals' records attached. Copied to Dr Moonga and the camp officer.</span></div>
+      <div class="msg in"><span class="who" data-t="w.z4who">Zamai · 06:07</span><span data-t="w.z4">Also: two other kraals near you reported the same signs this week. The district veterinary officer has been informed. Nothing more is needed from you now.</span></div>
+      <p class="muted" style="margin-top:10px" data-t="w.rule">The rule behind the escalation is plain: three reports with the same signs from herds using one dip tank within seven days. Who receives it is for the veterinary department to decide; today disease control sits with the district veterinary officer under the Animal Health Act, who can restrict movement. The system reads, asks once, files and forwards. It never diagnoses.</p>
+      <p class="muted" data-t="w.tonga">In Tonga the same chat runs in Tonga; the English is shown here until the Tonga lines are in.</p>
+    </section>
+
+    <!-- 4 vet reply -->
+    <section class="screen" id="s4">
+      <h1 data-t="s4.title">The vet replies</h1>
+      <div class="msg in"><span class="who" data-t="s4.from">Mweemba · 06:10</span><span data-t="s4.m1">Chipego: coughing, not eating since yesterday. Photo attached.</span><img src="photos/a5.jpg" alt="" style="display:block;width:100%;border-radius:8px;margin-top:8px"></div>
+      <div class="msg in"><span class="who" data-t="s4.hist">Record · sent automatically</span><span data-t="s4.m2">Heifer, 2 years. Dipped weekly. Vaccinated May. No movements. Two similar reports at Siamundele dip tank this week.</span></div>
+      <div class="msg vet"><span class="who" data-t="s4.vet">Dr Moonga, Choma · 07:55</span><span data-t="s4.m3">Keep her apart from the herd and give water in the shade. Do not sell or move any animal until I have seen her. I will come tomorrow morning.</span></div>
+      <div class="row"><span class="tag urgent" data-t="s4.visit">Visit needed</span><span class="muted" data-t="s4.time">Answered in under two hours</span></div>
+    </section>
+
+    <!-- 5 early warning -->
+    <section class="screen" id="s5">
+      <h1 data-t="s5.title">Early warning</h1>
+      <p class="muted" data-t="s5.p1">What the camp officer sees on Wednesday.</p>
+      <svg class="map" viewBox="0 0 340 230" role="img" aria-label="Map of dip tanks with three sick reports around one">
+        <g fill="none" stroke="#D5C9AE" stroke-width="1"><path d="M20 60 C80 40 140 70 200 50 S300 60 330 40"/><path d="M10 150 C70 140 120 170 190 150 S280 160 335 140"/><path d="M120 10 C110 60 130 120 100 220"/></g>
+        <g font-family="IBM Plex Sans, Helvetica, Arial, sans-serif" font-size="11" fill="#4E463A">
+          <g><path d="M60 95 l8 -5 8 5 v10 l-8 5 -8 -5z" fill="#1B1711"/><text x="60" y="124">Nkandela</text></g>
+          <g><path d="M250 70 l8 -5 8 5 v10 l-8 5 -8 -5z" fill="#1B1711"/><text x="246" y="99">Moomba</text></g>
+          <g><path d="M170 150 l8 -5 8 5 v10 l-8 5 -8 -5z" fill="#1B1711"/><text x="150" y="185">Siamundele</text></g>
+          <g><path d="M270 180 l8 -5 8 5 v10 l-8 5 -8 -5z" fill="#1B1711"/><text x="262" y="209">Pemba</text></g>
+          <circle cx="178" cy="155" r="48" fill="none" stroke="#B06E2E" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="150" cy="135" r="6" fill="#B06E2E"/><circle cx="205" cy="128" r="6" fill="#B06E2E"/><circle cx="195" cy="185" r="6" fill="#B06E2E"/>
+        </g>
+      </svg>
+      <div class="card alert" style="margin-top:12px"><b data-t="s5.alert">Three reports, one dip tank, five days.</b><p class="muted" style="margin:4px 0 0" data-t="s5.alert2">Same signs: cough, not eating. The camp officer books the herds around Siamundele for vaccination on Friday.</p></div>
+      <p class="muted" data-t="s5.p2">An outbreak that once killed forty animals and closed a district's markets for months stops at four.</p>
+    </section>
+
+    <!-- 6 dip day -->
+    <section class="screen" id="s6">
+      <h1 data-t="s6.title">Dip day</h1>
+      <div class="card dark"><b data-t="s6.rem">Reminder · Friday</b><p class="muted" style="margin:4px 0 0" data-t="s6.rem2">Siamundele dip tank, 07:00. Vaccination for the herds around the tank, by the camp officer.</p></div>
+      <p data-t="s6.p1">After the tank, one tap for the whole herd.</p>
+      <div class="row"><button class="btn green" id="dipall" data-t="s6.btn">Dipped and vaccinated: all 11</button></div>
+      <div class="card" id="dipdone" style="display:none;margin-top:12px"><span class="check">✓</span> <span data-t="s6.done">11 animals recorded. The campaign now knows which animals, not how many doses.</span></div>
+    </section>
+
+    <!-- 7 selling -->
+    <section class="screen" id="s7">
+      <h1 data-t="s7.title">Selling two steers</h1>
+      <p class="muted" data-t="s7.p1">What steers of this class fetched within 30 km, last 30 days. Illustrative prices.</p>
+      <div class="bars">
+        <div class="b"><span data-t="s7.c1">Auction, Choma</span><div class="bar"><i style="width:92%"></i></div><span class="r">K 9,200</span></div>
+        <div class="b"><span data-t="s7.c2">Cooperative sale</span><div class="bar"><i style="width:86%"></i></div><span class="r">K 8,600</span></div>
+        <div class="b me"><span data-t="s7.c3">Trader at the kraal</span><div class="bar"><i style="width:68%"></i></div><span class="r">K 6,800</span></div>
+      </div>
+      <div class="card"><b data-t="s7.card">The trader offered K 6,800.</b><p class="muted" style="margin:4px 0 0" data-t="s7.card2">Mutinta knows what the steers are worth. She sells at the fair price, or waits two weeks for the auction. The trader knows she knows.</p></div>
+      <p class="muted" data-t="s7.p2">Prices pooled from members' own sale records and the auction list. Median, by class and weight band.</p>
+    </section>
+
+    <!-- 8 passport -->
+    <section class="screen" id="s8">
+      <h1 data-t="s8.title">The record travels</h1>
+      <div class="card">
+        <img src="photos/a3.jpg" alt="" style="display:block;width:100%;border-radius:8px;margin:0 0 10px"><div class="row" style="justify-content:space-between"><b>Mwiinga · <span data-t="s8.class">steer, 3 years</span></b><span class="tag" data-t="s8.id">ID ZM-SP-0417</span></div>
+        <ul class="list" style="margin-top:8px">
+          <li><span data-t="s8.r1">Born here, Pemba</span><span class="check">✓</span></li>
+          <li><span data-t="s8.r2">Dipped weekly, 2024 to 2026</span><span class="check">✓</span></li>
+          <li><span data-t="s8.r3">Vaccinated, last on Friday</span><span class="check">✓</span></li>
+          <li><span data-t="s8.r4">Never in a quarantine zone</span><span class="check">✓</span></li>
+          <li><span data-t="s8.r5">Sold to the abattoir, Choma</span><span class="r" data-t="s8.today">today</span></li>
+        </ul>
+      </div>
+      <p data-t="s8.p1">This record is what lets the abattoir sell into a market that pays for proof. The export target needs it on every animal.</p>
+      <div class="row" style="gap:6px;margin:4px 0 6px;flex-wrap:nowrap"><img src="photos/m3.jpg" alt="" style="flex:1;min-width:0;border-radius:8px"><img src="photos/m7.jpg" alt="" style="flex:1;min-width:0;border-radius:8px"><img src="photos/m9.jpg" alt="" style="flex:1;min-width:0;border-radius:8px"></div>
+      <p class="muted" style="margin:0 0 8px" data-t="s8.muzzle2">Animal identity is the goal; the tag under the 2024 Act is the proof we have. The muzzle pattern is an idea: unique like a fingerprint, independent of the coat, free per animal. Whether it can be photographed well enough by a herder at a dip tank, in dust, sun and movement, nobody has shown yet.</p>
+      <p class="muted" data-t="s8.p2b">So it is not promised here. It is tested first: pictures of the same animals in different settings and light, by different people, and a check whether day two matches day one. Feasible, and at what cost in time, or not. Until then: tag, photo, and a person who confirms.</p>
+    </section>
+
+    <!-- 9 province -->
+    <!-- G breeding -->
+    <section class="screen" id="sG">
+      <h1 data-t="g.title">Breeding, from the record</h1>
+      <p class="muted" data-t="g.p1">After a year of calves, weanings and losses, the record answers questions nobody could answer from memory: which cows deliver, which bulls' calves grow, which lines to keep.</p>
+      <h2 data-t="g.cows">Cows</h2>
+      <div class="card">
+        <ul class="list">
+          <li><span>Nkuku</span><span class="r" data-t="g.c1">calf 2026 · weaned 7 mo · 142 kg</span></li>
+          <li><span>Choolwe</span><span class="r" data-t="g.c2">calf 2025 · lost at 2 months</span></li>
+          <li><span>Luumuno <span class="tag urgent" data-t="g.flag">flag</span></span><span class="r" data-t="g.c3">no calf since 2024</span></li>
+          <li><span>Siamoonga</span><span class="r" data-t="g.c4">calf 2026 · difficult birth · vet</span></li>
+        </ul>
+      </div>
+      <p class="muted" data-t="g.cowsnote">A cow with no calf in two seasons, a calf lost, a difficult birth: each is one entry at the time, and together they show which mothers carry the herd and which cost it. The owner decides; the record shows.</p>
+      <h2 data-t="g.bulls">Bulls, by their calves</h2>
+      <div class="bars">
+        <div class="b"><span>Mulonga</span><div class="bar"><i style="width:92%"></i></div><span data-t="g.b1">6 calves · 5 weaned</span></div>
+        <div class="b"><span>Simoonga</span><div class="bar"><i style="width:60%"></i></div><span data-t="g.b2">4 calves · 2 weaned</span></div>
+      </div>
+      <p class="muted" data-t="g.bullsnote">Weaning weight and survival by sire. Two seasons of this, and the owner knows which bull to keep and which to sell, from outcomes, not from looks.</p>
+      <h2 data-t="g.score">Breeding score, worst first</h2>
+      <table class="tbl">
+        <tr><th data-t="g.s.a">Animal</th><th data-t="g.s.b">Score</th><th style="text-align:left" data-t="g.s.c">What pulls it down, or up</th></tr>
+        <tr><td>Luumuno · cow</td><td class="w">18</td><td class="x" data-t="g.s1">no calf 2 seasons · thin by October</td></tr>
+        <tr><td>Simoonga · bull</td><td class="w">34</td><td class="x" data-t="g.s2">2 of 4 calves weaned · light weaners</td></tr>
+        <tr><td>Choolwe · cow</td><td class="w">41</td><td class="x" data-t="g.s3">calf lost 2025 · calved 2023, 2025</td></tr>
+        <tr><td>Siakwale · ox</td><td>–</td><td class="x" data-t="g.s4">strong draught · an ox is valued, not scored for breeding</td></tr>
+        <tr><td>Nkuku · cow</td><td class="g">82</td><td class="x" data-t="g.s5">calf every year · heavy weaners · held condition in the 2024 drought</td></tr>
+        <tr><td>Mulonga · bull</td><td class="g">88</td><td class="x" data-t="g.s6">5 of 6 weaned · 138 kg average · no sick report in 3 years</td></tr>
+      </table>
+      <p class="muted" style="font-size:12px;margin:0 0 6px" data-t="g.scorenote">The score is a sum over the record, not an opinion: calving, weaning weight and survival of offspring, condition through the dry season, sick reports, and later carcass grades of relatives. The weights are set by the breeding goal, in the open, and every animal shows why. Sort worst first and the cull list writes itself; the owner still decides.</p>
+      <h2 data-t="g.traits">Wanted traits, as the record can see them</h2>
+      <div class="card">
+        <ul class="list">
+          <li style="display:block"><span data-t="g.t1" style="font-weight:500">Hardiness</span><br><span class="muted" data-t="g.t1r">condition held through the dry season · calved under village conditions · no sick report in tick season</span></li>
+          <li style="display:block"><span data-t="g.t2" style="font-weight:500">Fertility</span><br><span class="muted" data-t="g.t2r">a calf every year · calf alive at weaning</span></li>
+          <li style="display:block"><span data-t="g.t3" style="font-weight:500">Growth</span><br><span class="muted" data-t="g.t3r">weaning weight · gain in the feedlot</span></li>
+          <li style="display:block"><span data-t="g.t4" style="font-weight:500">Meat quality</span><br><span class="muted" data-t="g.t4r">carcass weight and grade of the animal and its relatives</span></li>
+          <li style="display:block"><span data-t="g.t5" style="font-weight:500">Milk</span><br><span class="muted" data-t="g.t5r">calf growth to weaning · household milk entries</span></li>
+          <li style="display:block"><span data-t="g.t6" style="font-weight:500">Draught</span><br><span class="muted" data-t="g.t6r">work days recorded · temperament</span></li>
+        </ul>
+      </div>
+      <h2 data-t="g.lines">Lines: the question for the breeders</h2>
+      <div class="card dark"><b data-t="g.ln1">Fixed point: for export, meat quality is cardinal.</b><p class="muted" style="margin:4px 0 6px" data-t="g.ln1b">A premium line that responds to the feedlot and grades high at the hook is what a billion dollars of beef is made of. The question is what sits beside it.</p>
+        <p class="muted" style="margin:0 0 6px" data-t="g.ln2">Option A. One main line, dual or triple purpose, meat, milk and draught in the village herd, and a premium beef line above it, bred from the animals the record ranks highest for growth and carcass.</p>
+        <p class="muted" style="margin:0 0 6px" data-t="g.ln3">Option B. Separate strains from the start: predominantly meat, predominantly milk, draught, each with its own score and its own sires.</p>
+        <p class="muted" style="margin:0" data-t="g.ln4">The record does not decide this; breeders and the ministry do. What the record gives them is the ranking under either goal, from outcomes, and the proof the buyer asks for.</p></div>
+      <h2 data-t="g.wean">Weaning</h2>
+      <div class="card"><b data-t="g.w1">Weaned · one tap at about seven months</b><p class="muted" style="margin:4px 0 0" data-t="g.w1b">Weight from the crush where there is one, from the standard picture later. The weaning weight is the first outcome a sire can be judged by, long before the abattoir.</p></div>
+      <h2 data-t="g.prov">The gene pool of the province</h2>
+      <div class="card dark"><b data-t="g.pv1">Herd by herd, and all herds together</b><p class="muted" style="margin:4px 0 0" data-t="g.pv1b">The same record across thousands of herds shows the province which lines survive drought and disease, which grow, which calve every year, and where a weak line is spreading because it is the only bull in reach. Then the two moves become possible: bringing desirable genetics in where they are missing, through community bulls or proven sires, and taking unwanted ones out, by advice and by price, never by force. The owner decides for his herd; the province sees the pattern and acts on it.</p></div>
+      <p class="muted" data-t="g.goal">That is the breeding goal: a better Southern Province herd, built one herd at a time, on records instead of guesses.</p>
+    </section>
+
+    <section class="screen" id="s9">
+      <h1 data-t="s9.title">Southern Province, this week</h1>
+      <p class="muted" style="margin:0 0 8px" data-t="s9.p0">Provincial Veterinary Officer's view. Week 45. Numbers illustrative; the shape is what the record produces.</p>
+      <div class="kpis">
+        <div class="kpi"><b>1.75 m</b><span data-t="s9.k1">cattle (ZamStats 2024)</span></div>
+        <div class="kpi"><b>412 k</b><span data-t="s9.k2">registered · 24%</span></div>
+        <div class="kpi"><b>38,900</b><span data-t="s9.k3">herds with a record</span></div>
+        <div class="kpi"><b>214/311</b><span data-t="s9.k4">dip tanks reporting</span></div>
+        <div class="kpi"><b>61%</b><span data-t="s9.k5">FMD vaccination, registered herd</span></div>
+        <div class="kpi warn"><b>143</b><span data-t="s9.k6">sick reports, 7 days</span></div>
+        <div class="kpi warn"><b>2</b><span data-t="s9.k7">clusters open</span></div>
+        <div class="kpi"><b>3,120</b><span data-t="s9.k8">movements recorded, 7 days</span></div>
+        <div class="kpi"><b>96 k</b><span data-t="s9.k9">export-eligible animals</span></div>
+      </div>
+
+      <h2 class="sec" data-t="s9.h1">Disease · open clusters</h2>
+      <table class="tbl">
+        <tr><th data-t="s9.t1a">Place</th><th data-t="s9.t1b">Reports</th><th data-t="s9.t1c">Signs</th><th data-t="s9.t1d">Status</th></tr>
+        <tr><td>Siamundele · Pemba</td><td class="w">3 / 6 d</td><td data-t="s9.r1c">cough, not eating</td><td class="w" data-t="s9.r1d">DVO · visit Fri</td></tr>
+        <tr><td>Simwatachela · Kalomo</td><td class="w">5 / 4 d</td><td data-t="s9.r2c">skin nodules</td><td data-t="s9.r2d">vaccinating</td></tr>
+        <tr><td>Nkandela · Pemba</td><td>1</td><td data-t="s9.r3c">limping</td><td data-t="s9.r3d">watch</td></tr>
+      </table>
+      <p class="muted" style="font-size:12px;margin:0 0 4px" data-t="s9.n1">Rule: three reports, same signs, one dip tank, seven days. Each cluster carries its reports, photos and the animals' movement history. Markets around an open cluster are flagged before any sale.</p>
+
+      <h2 class="sec" data-t="s9.h2">Districts</h2>
+      <table class="tbl">
+        <tr><th data-t="s9.t2a">District</th><th data-t="s9.t2b">Cattle</th><th data-t="s9.t2c">Reg.</th><th data-t="s9.t2d">Dip</th><th data-t="s9.t2e">Mort. 12 m</th><th data-t="s9.t2f">Export</th></tr>
+        <tr><td>Monze</td><td>204 k</td><td>31%</td><td>78%</td><td class="g">6.1%</td><td>18 k</td></tr>
+        <tr><td>Kalomo</td><td>195 k</td><td>22%</td><td>64%</td><td class="w">11.8%</td><td>9 k</td></tr>
+        <tr><td>Namwala</td><td>171 k</td><td>19%</td><td>51%</td><td class="w">13.4%</td><td>4 k</td></tr>
+        <tr><td>Itezhi-tezhi</td><td>156 k</td><td>12%</td><td>43%</td><td class="w">14.0%</td><td>2 k</td></tr>
+        <tr><td>Choma</td><td>138 k</td><td>36%</td><td>81%</td><td class="g">5.4%</td><td>21 k</td></tr>
+        <tr><td>Kazungula</td><td>135 k</td><td>15%</td><td>47%</td><td class="w">12.9%</td><td>3 k</td></tr>
+        <tr><td>Mazabuka</td><td>111 k</td><td>29%</td><td>72%</td><td>8.2%</td><td>12 k</td></tr>
+        <tr><td>Pemba</td><td>58 k</td><td>41%</td><td>84%</td><td class="g">4.9%</td><td>11 k</td></tr>
+        <tr><td data-t="s9.more">7 more districts</td><td>582 k</td><td>22%</td><td>49%</td><td class="w">12.6%</td><td>16 k</td></tr>
+      </table>
+      <p class="muted" style="font-size:12px;margin:0 0 4px" data-t="s9.n2">Reg.: animals with a record. Dip: registered animals dipped in the last 14 days. Mort.: deaths recorded in registered herds, twelve months. Export: animals with a complete movement history outside any restricted zone. Where registration is high, mortality is low: the record and the dip tank arrive together.</p>
+
+      <h2 class="sec" data-t="s9.h3">Movements and export · 7 days</h2>
+      <table class="tbl">
+        <tr><th data-t="s9.t3a">Flow</th><th data-t="s9.t3b">Animals</th><th data-t="s9.t3c">Of which blocked</th></tr>
+        <tr><td data-t="s9.m1">Kraal to dip tank</td><td>2,410</td><td>0</td></tr>
+        <tr><td data-t="s9.m2">To sale pens and auctions</td><td>486</td><td class="w">31 <span data-t="s9.m2b">· from a cluster zone</span></td></tr>
+        <tr><td data-t="s9.m3">To feedlots</td><td>164</td><td>0</td></tr>
+        <tr><td data-t="s9.m4">To abattoirs</td><td>60</td><td>0</td></tr>
+        <tr><td data-t="s9.m5">Across the district line</td><td>212</td><td class="w">9 <span data-t="s9.m5b">· no permit on record</span></td></tr>
+      </table>
+
+      <h2 class="sec" data-t="s9.h4">Breeding · registered herds, 12 months</h2>
+      <div class="kpis">
+        <div class="kpi"><b>58%</b><span data-t="s9.b1">cows with a calf this year</span></div>
+        <div class="kpi"><b>81%</b><span data-t="s9.b2">calves reaching weaning</span></div>
+        <div class="kpi"><b>131 kg</b><span data-t="s9.b3">median weaning weight</span></div>
+        <div class="kpi warn"><b>22%</b><span data-t="s9.b4">cows with no calf in 2 seasons</span></div>
+        <div class="kpi"><b>1,840</b><span data-t="s9.b5">sires with 5+ recorded calves</span></div>
+        <div class="kpi"><b>3</b><span data-t="s9.b6">districts with one bull per 60+ cows</span></div>
+      </div>
+      <p class="muted" style="font-size:12px;margin:0 0 4px" data-t="s9.n3">The gene-pool view: where calving is low, where weaning survival is low, where a single line dominates. Places for proven sires and community bulls; lines to advise out, by price.</p>
+
+      <h2 class="sec" data-t="s9.h5">Prices · median, this week</h2>
+      <table class="tbl">
+        <tr><th data-t="s9.t4a">Class</th><th>Choma</th><th>Monze</th><th>Kalomo</th><th data-t="s9.t4e">vs 4 wks</th></tr>
+        <tr><td data-t="s9.p1">Steer, 3 y</td><td>K 9,800</td><td>K 9,400</td><td>K 8,900</td><td class="g">+3%</td></tr>
+        <tr><td data-t="s9.p2">Cow, in calf</td><td>K 8,200</td><td>K 7,900</td><td>K 7,600</td><td>+1%</td></tr>
+        <tr><td data-t="s9.p3">Weaner</td><td>K 3,900</td><td>K 3,700</td><td>K 3,400</td><td class="w">-4%</td></tr>
+        <tr><td data-t="s9.p4">Carcass, per kg CDM</td><td>K 68</td><td>K 66</td><td>K 63</td><td>+2%</td></tr>
+      </table>
+
+      <h2 class="sec" data-t="s9.h6">This week's list</h2>
+      <ul class="list" style="font-size:13.5px">
+        <li><span data-t="s9.l1">Siamundele: vaccination Friday 07:00, 11 herds, 640 animals; vet visit Thu</span><span class="r tag urgent" data-t="s9.l1r">open</span></li>
+        <li><span data-t="s9.l2">Simwatachela: ring vaccination, 1,900 animals, 3 days; movement stop in force</span><span class="r tag urgent" data-t="s9.l2r">open</span></li>
+        <li><span data-t="s9.l3">97 dip tanks silent 14 days: camp officers to call the committees</span><span class="r tag" data-t="s9.l3r">task</span></li>
+        <li><span data-t="s9.l4">Namwala, Itezhi-tezhi: registration drives before the rains</span><span class="r tag" data-t="s9.l4r">plan</span></li>
+        <li><span data-t="s9.l5">Export audit: 96 k eligible animals, 21 k in Choma; abattoir capacity the limit</span><span class="r tag" data-t="s9.l5r">note</span></li>
+      </ul>
+      <p class="muted" style="margin-top:8px" data-t="s9.n4">Counts, coverage, movements, clusters, prices. Never a farmer's money. Every number on this screen is a sum over rows the farmers, herders, vets and abattoirs wrote; none is typed here.</p>
+      <div class="row"><button class="btn ghost" data-go="s1" data-t="s9.again">Walk the week again</button></div>
+    </section>
+
+    <!-- P the pilot -->
+    <section class="screen" id="sP">
+      <h1 data-t="pl.title">What we have, and what we suggest</h1>
+      <p data-t="pl.p1">What we have is the technology and the people who built it. Where it is tried, with whom, how large and for how long is the veterinary service's and the partners' decision. What follows is a suggestion.</p>
+      <div class="card">
+        <ul class="list">
+          <li style="display:block"><span data-t="pl.k1" style="font-weight:500">Where</span><br><span class="muted" data-t="pl.v1">wherever it is wanted: a veterinary camp, a dip tank area, a cooperative, a feedlot, an abattoir, in any combination</span></li>
+          <li style="display:block"><span data-t="pl.k2" style="font-weight:500">What</span><br><span class="muted" data-t="pl.v2">register, sick report to a vet, dip day, movement at the dip tank, the record that travels to an abattoir; the feedlot's gate-to-hook pair where there is a feedlot</span></li>
+          <li style="display:block"><span data-t="pl.k3" style="font-weight:500">How long</span><br><span class="muted" data-t="pl.v3">we suggest one place and one season, with a comparable area alongside</span></li>
+          <li style="display:block"><span data-t="pl.k4" style="font-weight:500">Who</span><br><span class="muted" data-t="pl.v4">the veterinary service, a cooperative, a feedlot or an abattoir if they want it, and us</span></li>
+          <li style="display:block"><span data-t="pl.k5" style="font-weight:500">Measured by</span><br><span class="muted" data-t="pl.v5">reports answered, and how fast · records complete at sale · herders still using it in month six · cost per animal</span></li>
+          <li style="display:block"><span data-t="pl.k6" style="font-weight:500">What a site would need</span><br><span class="muted" data-t="pl.v6">phones, a recorder, training, bundles: indicative, for the partners to price; the people are the real cost</span></li>
+        </ul>
+      </div>
+      <h2 data-t="pl.ask">What we ask</h2>
+      <div class="card dark">
+        <p class="muted" style="margin:0 0 6px" data-t="pl.a1">1. The veterinary service of Southern Province in the pilot: its camp officers record, its district officer receives the reports, its finding closes each case.</p>
+        <p class="muted" style="margin:0 0 6px" data-t="pl.a2">2. An interface to the national identification system, so the pilot's records sit under it from day one, never beside it.</p>
+        <p class="muted" style="margin:0" data-t="pl.a3">3. A name: the officer who owns the pilot on the government side, whom we report to monthly, in Tonga and in English.</p>
+      </div>
+      <h2 data-t="pl.bring">What we bring</h2>
+      <p data-t="pl.b1">The system, running; the training and the procedures, written with the camp; our machine and our line; the Tonga; the monthly report with the numbers, good or bad. Not for profit for as long as it is used to promote smallholder cattle farming in Southern Province, no charge to any farmer; any commercial use is discussed separately.</p>
+      <p class="muted" data-t="pl.p2">If the season shows that information was not the missing input, we say so, and the records stay with the camp.</p>
+      <p class="muted"><a href="concept-note.pdf" download style="color:var(--green);font-weight:500" data-t="pl.note">The concept note (PDF): this proposal on ten pages, with the screens and a QR code to the demo</a></p>
+      <div class="row"><button class="btn" data-go="s0" data-t="pl.again">Back to the start</button><button class="btn ghost" id="fullwalk" data-t="pl.full">The full walk</button></div>
+    </section>
+
+    <!-- E the economics -->
+    <section class="screen" id="sE">
+      <h1 data-t="e.title">The economics, as a cattle man reads them</h1>
+      <p class="muted" data-t="e.p0">One smallholder herd of twelve cows, then the province, then the export sum. Government's own baseline and targets; the kwacha figures are derived from a working value of K8,000 a head, which a herd-weighted check puts at about K8,500 (oxen and cows above, calves and weaners below; the abattoir price behind it is unpublished), and are marked so.</p>
+
+      <h2 class="sec" data-t="e.h1">One herd · twelve breeding cows · a year</h2>
+      <table class="tbl">
+        <tr><th></th><th data-t="e.t1b">Today</th><th data-t="e.t1c">At target</th><th data-t="e.t1d">Difference</th></tr>
+        <tr><td data-t="e.r1">Calving rate</td><td>29%</td><td>40%</td><td class="g">+11 pts</td></tr>
+        <tr><td data-t="e.r2">Calves born</td><td>3.5</td><td>4.8</td><td class="g">+1.3</td></tr>
+        <tr><td data-t="e.r3">Mortality, whole herd of 30</td><td>12.5%</td><td>5%</td><td class="g">-7.5 pts</td></tr>
+        <tr><td data-t="e.r4">Animals lost</td><td>3.8</td><td>1.5</td><td class="g">-2.3</td></tr>
+        <tr><td data-t="e.r5">Net herd growth</td><td class="w">-0.3</td><td class="g">+3.3</td><td class="g">+3.6 head</td></tr>
+        <tr><td data-t="e.r6">Value of the difference, derived</td><td></td><td></td><td class="g">~K29,000</td></tr>
+      </table>
+      <p class="muted" style="font-size:12px" data-t="e.n1">At the baseline the herd stands still: the calves born barely replace the animals that die. At the target it grows by a tenth a year and the owner has animals to sell. Nothing in this table needs a feedlot or an exporter; it needs calves alive and animals not dying, which is dipping, vaccination, a vet who answers, and a bull that works.</p>
+
+      <h2 class="sec" data-t="e.h2">Where the kwacha leak</h2>
+      <ul class="list" style="font-size:13.5px">
+        <li><span data-t="e.l1">Dry-season selling: condition falls, price falls with it. 96 percent of Mazabuka farmers make that link.</span><span class="r w" data-t="e.l1r">-20 to -40%</span></li>
+        <li><span data-t="e.l2">The trader knows the price, the seller does not. The gap between the farm-gate price and the pooled local price.</span><span class="r w" data-t="e.l2r">OPEN</span></li>
+        <li><span data-t="e.l3">A death: the whole animal, at once. One point of mortality in the province is about 17,500 animals a year.</span><span class="r w" data-t="e.l3r">~K140 m / pt</span></li>
+        <li><span data-t="e.l4">An outbreak: forty animals and a district's markets closed for months. Prices in the closed zone fall; nothing moves.</span><span class="r w" data-t="e.l4r">months</span></li>
+        <li><span data-t="e.l5">No proof: an animal without a history sells as a local animal, never as an export animal.</span><span class="r w" data-t="e.l5r">the premium</span></li>
+      </ul>
+
+      <h2 class="sec" data-t="e.h3">The province</h2>
+      <div class="kpis">
+        <div class="kpi"><b>1.75 m</b><span data-t="e.k1">cattle (ZamStats 2024)</span></div>
+        <div class="kpi"><b>~K14 bn</b><span data-t="e.k2">living capital at K8,000 a head, derived; herd-weighted check K8,500</span></div>
+        <div class="kpi"><b>12.5 → 5%</b><span data-t="e.k3">mortality, baseline to target (PDU)</span></div>
+        <div class="kpi"><b>29 → 40%</b><span data-t="e.k4">calving rate, baseline to target (PDU)</span></div>
+        <div class="kpi"><b>~131 k</b><span data-t="e.k5">animals a year saved at 5% mortality, derived</span></div>
+        <div class="kpi"><b>~K1 bn</b><span data-t="e.k6">a year, from mortality alone, derived</span></div>
+      </div>
+
+      <h2 class="sec" data-t="e.h4">The export sum</h2>
+      <table class="tbl">
+        <tr><th data-t="e.t2a">Step</th><th data-t="e.t2b">Figure</th><th style="text-align:left" data-t="e.t2c">Source</th></tr>
+        <tr><td data-t="e.x1">The goal</td><td>US$1 bn / year · 11 m head</td><td class="x" data-t="e.x1s">President, 9 Oct 2026</td></tr>
+        <tr><td class="x" data-t="e.x2">At US$4 to 8 a kilogram, carcass-weight equivalent</td><td>125,000 to 250,000 t</td><td class="x" data-t="e.x2s">Zambia's 2025 exports: 971 t, US$3.79/kg frozen to the DRC; Saudi imports US$4.44 frozen, US$6.20 chilled (2024); EU about €6.35/kg carcass (Comtrade, SFDA data, EU prices)</td></tr>
+        <tr><td data-t="e.x3">At 220 kg a carcass</td><td>0.6 to 1.1 m head a year</td><td class="x" data-t="e.x3s">derived</td></tr>
+        <tr><td class="x" data-t="e.x4">Export offtake that implies, on 11 m, before domestic slaughter</td><td>5 to 10%</td><td class="x" data-t="e.x4s">derived</td></tr>
+        <tr><td data-t="e.x5">Animals with an identity today</td><td>529,266 of 5 m</td><td class="x" data-t="e.x5s">Act No. 2 of 2024, progress reported</td></tr>
+      </table>
+      <p class="muted" style="font-size:12px" data-t="e.n2">A million export animals a year need a million histories: born where, dipped when, moved through which zone, graded what at the hook. The feedlot and the abattoir are the last two entries; the first entries are made at the kraal and the dip tank, by the people in this demo. The herd grows to the target only if calving goes up and deaths go down first; the export sum rides on the herd sum.</p>
+      <p class="muted" style="font-size:12px" data-t="e.n3">Sources: ZamStats 2024 Integrated Agricultural Survey; Presidential Delivery Unit beef export page; the President's address of 9 October 2026; the Animal Identification and Traceability Act No. 2 of 2024; the Mazabuka drought-coping study. Working price and all derived figures are ours and are marked.</p>
+    </section>
+
+    <!-- 10 the idea -->
+    <section class="screen" id="s10">
+      <h1 data-t="p0.title">The idea</h1>
+      <p data-t="p0.p1">A picture of an animal, taken the same way every time, paired with what happened to that animal: its weight, its health, what its carcass weighed and graded. Enough pairs, and a model learns to read the picture.</p>
+      <div class="card">
+        <ul class="list">
+          <li><span data-t="p0.l1">Picture, standard angle</span><span class="r" data-t="p0.r1">the input</span></li>
+          <li><span data-t="p0.l2">Weight, condition, health, origin</span><span class="r" data-t="p0.r2">the record</span></li>
+          <li><span data-t="p0.l3">Carcass weight and grade</span><span class="r" data-t="p0.r3">the outcome</span></li>
+        </ul>
+      </div>
+      <p data-t="p0.p2">That is how a breeder works: select on what you can see, check against what you get. The feedlot and the abattoir already produce the outcomes. What is missing is the standard picture and the link.</p>
+      <p class="muted" data-t="p0.p3">Nothing here needs a model that exists yet. Phase one collects the pairs. The models come from the pairs.</p>
+    </section>
+
+    <!-- T how it is built -->
+    <section class="screen" id="sT">
+      <h1 data-t="t.title">How it is built</h1>
+      <div class="card"><b data-t="t.0">WhatsApp as one front door</b><p class="muted" style="margin:4px 0 0" data-t="t.0b">An option we offer because it is proven in daily use and makes usage natural: people already send photos and messages on WhatsApp, and the system reads them and makes the entry. A photo and "Chipego coughing, not eating" becomes a sick report with the time, the place and the animal, and goes to the vet. Dip day is one message: "dipped all". The sender's number is the login: each number is registered to one person, so a message arrives with that person's rights and no password. Nobody has to install anything to start. If WhatsApp is not wanted, for data security for instance, the same chat becomes a dedicated app of our own: the same messages, the same entries, on servers in Zambia.</p></div>
+      <div class="card dark"><b data-t="t.5">It understands Tonga, by design</b><p class="muted" style="margin:4px 0 0" data-t="t.5b">The herder writes Tonga, the line reads it. Not a big model guessing: a harness that holds the behaviour in code, a triage of what the message is (a sick report, a dip day, a sale, a question), and a small model trained here that only reads the Tonga, with a Tonga desk of teachers correcting what it gets wrong. The same design won the agriculture track of the World Bank's Small AI for Development hackathon in October 2026, an SMS cooperative for coffee farmers in Timor-Leste reading Tetum; we had built it months earlier for Yumi Milling's WhatsApp line in Batoka, where it answers staff and customers every day. Adapting it to cattle is about twenty hours of teacher input, not a new model.</p></div>
+      <div class="card"><b data-t="t.1">One database, many small apps</b><p class="muted" style="margin:4px 0 0" data-t="t.1b">The herder's phone, the vet's desk, the feedlot gate, the abattoir and the export check are different apps reading and writing the same record. Nothing is copied between systems, so nothing drifts apart.</p></div>
+      <div class="card"><b data-t="t.2">Each row knows who may see it</b><p class="muted" style="margin:4px 0 0" data-t="t.2b">Row-level security: an owner sees their own animals, a herder the ones in their care, a vet what the owner allows, the abattoir only the animals delivered to it. The rule sits on the data, not in the app, so no app can get round it.</p></div>
+      <div class="card"><b data-t="t.3">Every entry is stamped</b><p class="muted" style="margin:4px 0 0" data-t="t.3b">Each entry carries a hash: a fingerprint of its content and of the entry before it, with the time and the person. Change an entry later and every stamp after it breaks. Enter the same picture twice and its fingerprint is already there, so the double is refused.</p></div>
+      <div class="card"><b data-t="t.4">Works without signal</b><p class="muted" style="margin:4px 0 0" data-t="t.4b">Records are written on the phone first and sent when there is signal. Entries are added, never overwritten, so two people recording the same animal do not undo each other.</p></div>
+      <p class="muted" data-t="t.p1">Nothing exotic. It is the way a careful business keeps its books today, applied to cattle.</p>
+    </section>
+
+    <!-- H the apps -->
+    <section class="screen" id="sH">
+      <h1 data-t="h.title">One database, six apps</h1>
+      <p class="muted" data-t="h.p1">Each app is small and shows one role its own rows. Tap a screen to open it. Each can also take its entries from WhatsApp or SMS where that fits better than a screen.</p>
+      <div class="card"><b data-t="h.1">Herder app</b><p class="muted" style="margin:4px 0 6px" data-t="h.1b">Sees the animals in their care. Never money.</p><div class="row"><button class="btn ghost" data-go="s3" data-t="h.1x">Morning report</button><button class="btn ghost" data-go="s6" data-t="h.1y">Dip day</button></div></div>
+      <div class="card"><b data-t="h.2">Owner and rancher app</b><p class="muted" style="margin:4px 0 6px" data-t="h.2b">Sees their own animals, prices and money. Sells from the record.</p><div class="row"><button class="btn ghost" data-go="s1" data-t="h.2x">The herd</button><button class="btn ghost" data-go="s2" data-t="h.2y">New calf</button><button class="btn ghost" data-go="s7" data-t="h.2z">Selling</button><button class="btn ghost" data-go="s8" data-t="h.2w">The record</button></div></div>
+      <div class="card"><b data-t="h.3">Feedlot app</b><p class="muted" style="margin:4px 0 6px" data-t="h.3b">Sees the animals on the lot and what the owner allows of their history. Writes weights and pictures.</p><div class="row"><button class="btn ghost" data-go="s11" data-t="h.3x">The gate</button><button class="btn ghost" data-go="s12" data-t="h.3y">The stay</button></div></div>
+      <div class="card"><b data-t="h.4">Abattoir app</b><p class="muted" style="margin:4px 0 6px" data-t="h.4b">Sees only the animals delivered. Writes the carcass, the outcome every earlier entry points to.</p><div class="row"><button class="btn ghost" data-go="s13" data-t="h.4x">The carcass</button></div></div>
+      <div class="card"><b data-t="h.5">Vet app</b><p class="muted" style="margin:4px 0 6px" data-t="h.5b">Sees the cases sent to them, with history, and the clusters in their area.</p><div class="row"><button class="btn ghost" data-go="s4" data-t="h.5x">A case</button><button class="btn ghost" data-go="s5" data-t="h.5y">Early warning</button></div></div>
+      <div class="card"><b data-t="h.6">Ministry of Livestock app</b><p class="muted" style="margin:4px 0 6px" data-t="h.6b">Sees counts, coverage, movements and the export check. Never a farmer's money.</p><div class="row"><button class="btn ghost" data-go="s9" data-t="h.6x">The province</button><button class="btn ghost" data-go="sC" data-t="h.6y">Export check</button></div></div>
+      <p class="muted"><a href="spec-sheet.pdf" download data-t="h.spec" style="color:var(--green)">The spec sheet (PDF): what would be needed</a></p>
+      <p class="muted" data-t="h.p2">Same database, different rows. The rule that decides who sees what sits on the data, so adding the seventh app does not reopen the first six.</p>
+    </section>
+
+    <!-- Q quality data -->
+    <section class="screen" id="sQ">
+      <h1 data-t="q.title">Local AI can do wonders. On quality data.</h1>
+      <p data-t="q.p1">The models in this demo are not bought; they are grown here, on Zambian animals, on our own machine, and they belong to the people whose records trained them. Our Tonga translator was made that way, from printed books and paid speakers, for a few hundred dollars. The same method reads a muzzle, estimates a weight, spots a cluster. It works to the exact degree that the data are good.</p>
+      <h2 class="sec" data-t="q.h1">What quality means, entry by entry</h2>
+      <table class="tbl">
+        <tr><th data-t="q.t1a">Entry</th><th style="text-align:left" data-t="q.t1b">Good means</th></tr>
+        <tr><td data-t="q.e1">Standard picture</td><td class="x" data-t="q.e1b">head restrained · same angle and distance · shade, no flash · the sharpest of a burst · rejected and retaken on the spot</td></tr>
+        <tr><td data-t="q.e2">Weight</td><td class="x" data-t="q.e2b">a calibrated scale · same time of day · the picture taken at the same moment, or the pair is worthless</td></tr>
+        <tr><td data-t="q.e3">Identity</td><td class="x" data-t="q.e3c">tag read by the phone · a person who confirms · the muzzle only if the test shows it works</td></tr>
+        <tr><td data-t="q.e4">Health</td><td class="x" data-t="q.e4b">signs from a fixed list, with the photo · the vet's finding closes the case · confirmed cases become training data, suspicions do not</td></tr>
+        <tr><td data-t="q.e5">Events</td><td class="x" data-t="q.e5b">at the time, by the person who saw it · time and place from the phone · one tap, no typing</td></tr>
+        <tr><td data-t="q.e6">Carcass</td><td class="x" data-t="q.e6b">weight and grade by a trained inspector · linked to the tag at the lairage, before the hide comes off</td></tr>
+      </table>
+      <h2 class="sec" data-t="q.h2">How to get it: not yet clear, and that is the first work</h2>
+      <div class="card">
+        <ul class="list" style="font-size:13.5px">
+          <li><span data-t="q.w1">Procedures: one page per entry, a guide on the screen, a quality check on the phone that refuses a bad entry before it is saved</span></li>
+          <li><span data-t="q.w2">Training: meat inspectors, dip-tank recorders, camp officers and herders, trained on the procedure, tested, retrained; paid per entry that passes verification, as our Tonga desk pays per line</span></li>
+          <li><span data-t="q.w3">Tests: a second recorder on a sample of entries, agreement measured; a phase-zero trial of fifty animals, three photos each on two days, before any model is trained</span></li>
+          <li><span data-t="q.w4">The loop: the model's errors go back to the recorders as training, every month; the data get better because the model shows where they are bad</span></li>
+        </ul>
+      </div>
+      <p class="muted" data-t="q.p2">None of these procedures exists yet for Zambian cattle. They have to be written, tried at one dip tank and one abattoir, and changed by what breaks. That is cheaper than any camera and worth more than any model: the model comes free once the data are right.</p>
+    </section>
+
+    <!-- 11 phase 1: intake -->
+    <section class="screen" id="s11">
+      <h1 data-t="p1.title">Phase 1 · At the feedlot gate</h1>
+      <p class="muted" data-t="p1.p1">Every animal that arrives passes the crush pen. One person, one phone, three minutes.</p>
+      <img src="photos/a10.jpg" alt="" style="display:block;width:100%;border-radius:12px;margin:0 0 6px"><p class="muted" style="margin:0 0 10px" data-t="p1.example">In the crush: same place, same angle, every animal.</p><h2 data-t="p1.photos">Standard pictures</h2>
+      <div class="taps" data-group="photos" data-multi="1">
+        <button class="tap" type="button" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="11" rx="1"/><path d="M8 4h8M12 7v11"/></svg><span data-t="p1.above">From above, in the crush</span></button>
+        <button class="tap" type="button" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><path d="M3 15h18M6 15V9h12v6M9 15v4M15 15v4"/></svg><span data-t="p1.side">From the side, full length</span></button>
+      </div>
+      <h2 data-t="p1.weight">Weight at arrival</h2>
+      <div class="row" style="margin-bottom:10px"><button class="btn ghost" id="wdn" style="min-width:46px" aria-label="less">&minus;</button><div class="big" id="wval" style="min-width:120px;text-align:center">312 kg</div><button class="btn ghost" id="wup" style="min-width:46px" aria-label="more">+</button><span class="muted" data-t="p1.scale">from the scale</span></div>
+      <h2 data-t="p1.cond">Condition</h2><div class="row" style="gap:8px;margin:0 0 8px"><figure style="margin:0;flex:1"><img src="photos/a5.jpg" alt="" style="width:100%;border-radius:8px;display:block"><figcaption class="muted" style="font-size:12px;margin-top:3px" data-t="p1.ex2">2 · thin, ribs and hips showing</figcaption></figure><figure style="margin:0;flex:1"><img src="photos/a1.jpg" alt="" style="width:100%;border-radius:8px;display:block"><figcaption class="muted" style="font-size:12px;margin-top:3px" data-t="p1.ex4">4 · well covered</figcaption></figure></div>
+      <div class="taps" data-group="cond" style="grid-template-columns:repeat(5,1fr)">
+        <button class="tap" type="button" aria-pressed="false">1</button><button class="tap" type="button" aria-pressed="false">2</button><button class="tap" type="button" aria-pressed="true">3</button><button class="tap" type="button" aria-pressed="false">4</button><button class="tap" type="button" aria-pressed="false">5</button>
+      </div>
+      <h2 data-t="p1.age">Age, if known</h2>
+      <div class="taps" data-group="age2" style="grid-template-columns:repeat(4,1fr)">
+        <button class="tap" type="button" aria-pressed="false" data-t="p1.unknown">?</button><button class="tap" type="button" aria-pressed="false">1 y</button><button class="tap" type="button" aria-pressed="true">2 y</button><button class="tap" type="button" aria-pressed="false">3+ y</button>
+      </div>
+      <h2 data-t="p1.origin">Where from</h2>
+      <div class="taps" data-group="origin">
+        <button class="tap" type="button" aria-pressed="true">Pemba</button><button class="tap" type="button" aria-pressed="false">Monze</button><button class="tap" type="button" aria-pressed="false">Kalomo</button><button class="tap" type="button" aria-pressed="false" data-t="p1.other">Other</button>
+      </div>
+      <h2 data-t="p1.health">Health at the gate</h2>
+      <div class="taps" data-group="health" data-multi="1">
+        <button class="tap" type="button" aria-pressed="true" data-t="p1.h0">Nothing seen</button><button class="tap" type="button" aria-pressed="false" data-t="p1.h1">Ticks</button><button class="tap" type="button" aria-pressed="false" data-t="p1.h2">Wound</button><button class="tap" type="button" aria-pressed="false" data-t="p1.h3">Cough</button>
+      </div>
+      <div class="row"><button class="btn green" id="intake" data-t="p1.save">Admit · ZM-FL-0088</button><span class="muted" id="intakedone" style="display:none" data-t="p1.saved">Admitted. The record starts.</span></div>
+    </section>
+
+    <!-- 12 phase 1: the stay -->
+    <section class="screen" id="s12">
+      <h1 data-t="p2.title">Phase 1 · During the stay</h1>
+      <img src="photos/f1.jpg" alt="" style="display:block;width:100%;border-radius:12px;margin:0 0 6px">
+      <p class="muted" style="margin:0 0 12px" data-t="p2.goal">What the feedlot camera view becomes once the models exist: each animal recognised, its estimated weight beside it. An illustration of the goal, not a screenshot.</p>
+      <p data-t="p2.p1">A fixed camera over the feed bunk and one over the crush. The same animal, the same angle, every day for ninety days. Weighed at the crush every two weeks.</p>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><b>ZM-FL-0088</b><span class="tag" data-t="p2.days">day 1 to 90</span></div>
+        <svg viewBox="0 0 320 90" style="width:100%;height:auto;display:block;margin-top:8px">
+          <g><use href="#cow" x="4" y="30" width="56" height="33"/><use href="#cow" x="68" y="26" width="60" height="35"/><use href="#cow" x="136" y="22" width="64" height="37"/><use href="#cow" x="208" y="18" width="68" height="40"/></g>
+          <g font-family="IBM Plex Sans, Helvetica, Arial, sans-serif" font-size="11" fill="#4E463A"><text x="14" y="80">312 kg</text><text x="84" y="80">341 kg</text><text x="156" y="80">372 kg</text><text x="232" y="80">404 kg</text></g>
+        </svg>
+        <p class="muted" style="margin:6px 0 0" data-t="p2.cap">Illustrative. Four of ninety pictures, with the scale readings they pair with. Real pictures go here.</p>
+      </div>
+      <p data-t="p2.p2">The pairs are the product of this phase: picture and weight, picture and condition, day after day. Feed rations and treatments go into the same record.</p>
+    </section>
+
+    <!-- 13 phase 1: abattoir -->
+    <section class="screen" id="s13">
+      <h1 data-t="p3.title">Phase 1 · At the abattoir</h1>
+      <p class="muted" data-t="p3.p1">A camera at the lairage, the same standard angle. Then the carcass data the abattoir already records.</p>
+      <div class="row" style="gap:8px;margin:0 0 6px;align-items:flex-start;flex-wrap:nowrap"><img src="photos/a9.jpg" alt="" style="height:176px;width:auto;max-width:66%;border-radius:12px"><img src="photos/c8.jpg" alt="" style="height:176px;width:auto;border-radius:12px"></div>
+      <p class="muted" style="margin:0 0 12px" data-t="p3.hero">ZM-FL-0088: at the gate on day one, on the hook on day ninety. The picture now has its answer.</p>
+      <div class="card">
+        <ul class="list">
+          <li><span data-t="p3.l1">Live weight at exit</span><span class="r">404 kg</span></li>
+          <li><span data-t="p3.l2">Carcass weight, cold</span><span class="r">218 kg</span></li>
+          <li><span data-t="p3.l3">Dressing</span><span class="r">54%</span></li>
+          <li><span data-t="p3.l4">Grade and fat class</span><span class="r">A2</span></li>
+          <li><span data-t="p3.l5">Condemned</span><span class="r" data-t="p3.none">none</span></li>
+        </ul>
+      </div>
+      <div class="card dark"><b data-t="p3.learn">What the model learns from this one animal</b><p class="muted" style="margin:4px 0 0" data-t="p3.learn2">Ninety pictures, seven weights, one carcass. From a thousand animals: weight and condition from a photo at the gate, and a carcass estimate from the live animal. Checked against the scale before anyone relies on it.</p></div>
+      <h2 data-t="p3.pair">The pair the model learns from</h2>
+      <div class="row" style="gap:8px;margin:0 0 10px;align-items:flex-start">
+        <figure style="margin:0;flex:1"><img src="photos/a5.jpg" alt="" style="width:100%;border-radius:8px;display:block"><img src="photos/c1.jpg" alt="" style="width:100%;border-radius:8px;display:block;margin-top:4px"><figcaption class="muted" style="font-size:12px;margin-top:3px" data-t="p3.pair1">Thin at the gate, lean on the hook</figcaption></figure>
+        <figure style="margin:0;flex:1"><img src="photos/a1.jpg" alt="" style="width:100%;border-radius:8px;display:block"><img src="photos/c2.jpg" alt="" style="width:100%;border-radius:8px;display:block;margin-top:4px"><figcaption class="muted" style="font-size:12px;margin-top:3px" data-t="p3.pair2">Well covered at the gate, finished on the hook</figcaption></figure>
+      </div>
+      <p class="muted" data-t="p3.p2">Illustrative numbers and pictures. The dressing percentage and grades are the abattoir's own.</p>
+    </section>
+
+    <!-- 14 later phases -->
+    <section class="screen" id="s14">
+      <h1 data-t="p4.title">Phases 2 and 3</h1>
+      <img src="photos/d1.jpg" alt="" style="display:block;width:100%;border-radius:12px;margin:0 0 6px">
+      <p class="muted" style="margin:0 0 12px" data-t="p4.dip">The dip tank camera. Every animal that passes the race is recognised and recorded, with the dip and the vaccination against its name. The dip tank becomes the village's data point.</p>
+      <div class="card">
+        <b data-t="p4.a">Phase 2 · Sale pens and dip tanks</b>
+        <p class="muted" style="margin:4px 0 0" data-t="p4.a2">The same standard picture at the auction and at the dip tank. Paired with sale prices and with health events. The weight-from-a-photo model, now checked, lets a farmer see an estimate before the trader names a figure.</p>
+      </div>
+      <div class="card">
+        <b data-t="p4.b">Phase 3 · The herd app, in Tonga</b>
+        <p class="muted" style="margin:4px 0 0" data-t="p4.b2">What the first part of this demo showed. Owners, herders, a vet in the loop, early warning, the record that travels. Built on the records and models the first two phases produced.</p>
+      </div>
+      <p data-t="p4.p1">Each phase pays for the next with what it learns. None of them needs the one after it to be useful.</p>
+    </section>
+
+    <!-- 15 what first -->
+    <section class="screen" id="s15">
+      <h1 data-t="p5.title">What could be done first</h1>
+      <ul class="list" style="margin-bottom:12px">
+        <li><span data-t="p5.l1">One feedlot and one abattoir that agree to take part</span><span class="r" data-t="p5.r1">partners</span></li>
+        <li><span data-t="p5.l2">Two fixed cameras, a phone at the crush, the scale that is already there</span><span class="r" data-t="p5.r2">kit</span></li>
+        <li><span data-t="p5.l3">One person at intake, trained in an afternoon</span><span class="r" data-t="p5.r3">people</span></li>
+        <li><span data-t="p5.l4">The intake form, the record, the carcass link</span><span class="r" data-t="p5.r4">software, this</span></li>
+        <li><span data-t="p5.l5">One feedlot cycle, about ninety days, then the first model check</span><span class="r" data-t="p5.r5">time</span></li>
+      </ul>
+      <p data-t="p5.p1">The first cycle produces nothing a farmer sees. It produces the pairs. The second cycle produces the first number anyone can check against a scale. That is the gate to everything after.</p>
+      <p class="muted" data-t="p5.p2">The animal identification law and the export roadmap both ask for exactly these records.</p>
+    </section>
+
+    <!-- V where the value is -->
+    <section class="screen" id="sV">
+      <h1 data-t="v.title">Where the value is</h1>
+      <p data-t="v.p1">Not everything on these screens is worth building first. The order below follows the money and the losses, not the pictures.</p>
+      <div class="card"><b data-t="v.1">1 · Disease stopped early</b><p class="muted" style="margin:4px 0 0" data-t="v.1b">The largest prize: each point of mortality in Southern Province is about 17,500 animals a year. Needs sick reports with place and date reaching a vet, and vaccination as a list of animals. Open: if vaccines, dip chemicals or vets are the shortage, information moves nothing. Option: start with the camp officer's reports, not the herder's phone.</p></div>
+      <div class="card"><b data-t="v.2">2 · Proof for export</b><p class="muted" style="margin:4px 0 0" data-t="v.2b">The law for identification exists and has reached a tenth of its target. Needs tags issued and a movement record written at the dip tank, the sale pen and the gate. Open: who runs the mandated system, and whether a second tool is welcome. Option: build the record layer under that system, never beside it.</p></div>
+      <div class="card"><b data-t="v.3">3 · A fair price</b><p class="muted" style="margin:4px 0 0" data-t="v.3b">Needs pooled sale records by class and weight band. Open: whether sellers will share what they got. Option: start from auction lists, which are public, and add members' sales later.</p></div>
+      <div class="card"><b data-t="v.4">4 · Cattle that banks can see</b><p class="muted" style="margin:4px 0 0" data-t="v.4b">Needs the record first, then a lender or insurer willing to act on it. Open: nobody has yet paid for this. Option: a cooperative lending against its own members' recorded animals, before any bank.</p></div>
+      <div class="card"><b data-t="v.5">5 · Weight from a photo, breeding on outcomes</b><p class="muted" style="margin:4px 0 0" data-t="v.5b">The part that looks best and is worth least today. It needs the gate-to-hook pairs of phase one before it exists at all. Open: accuracy in a Zambian crush pen. Not first.</p></div>
+      <h2 data-t="v.build">What must be built, and nothing more</h2>
+      <p data-t="v.buildb">The intake form. The record store with its row rules and stamps. The sick report to a vet and the vet's reply. The movement entry at the dip tank. That is the whole first build. Muzzle identification, camera views and breeding models wait for the pairs.</p>
+      <h2 data-t="v.open">The questions that decide it</h2>
+      <ul class="list">
+        <li><span data-t="v.q1">Who pays after the pilot: government, buyers, lenders, insurers, or the farmers</span></li>
+        <li><span data-t="v.q2">Will herders keep using it without being chased. Use is the only verdict</span></li>
+        <li><span data-t="v.q3">Does the veterinary department want herders' reports, or would they burden it</span></li>
+        <li><span data-t="v.q4">Is information the missing link, or vaccines, dip and vets</span></li>
+        <li><span data-t="v.q5">WhatsApp as the front door, or an app; the camp officer first, or the herder</span></li>
+      </ul>
+      <p class="muted" style="margin-top:12px" data-t="v.p2">The value is where a record changes what someone does: a vet who comes, a buyer who pays for proof, an outbreak that stops at four. Build there first.</p>
+      <div class="card dark"><b data-t="v.spec">The spec sheet</b><p class="muted" style="margin:4px 0 8px" data-t="v.specb">What would be needed, from what runs today to what must be researched, with the open questions and the options.</p><div class="row"><a class="btn" href="spec-sheet.pdf" download style="text-decoration:none;background:var(--palm);color:var(--black);border-color:var(--palm)" data-t="v.specpdf">Download the PDF</a><a class="btn ghost" href="spec-sheet.html" style="text-decoration:none;color:var(--cream);border-color:var(--palm)" data-t="v.specweb">Read it here</a></div></div>
+      <div class="row"><button class="btn ghost" data-go="s0" data-t="v.again">Back to the start</button></div>
+    </section>
+
+    <div class="band light"></div>
+    <div class="nar" id="nar">
+      <div class="steps" id="steps"></div>
+      <p id="nartext"></p>
+      <div class="row" id="navrow">
+        <button class="btn ghost" id="back" data-t="nar.back">Back</button>
+        <button class="btn" id="next" data-t="nar.next">Next</button>
+        <a class="btn ghost" id="specbtn" href="spec-sheet.html" target="_blank" rel="noopener" data-t="nar.spec" style="margin-left:auto;text-decoration:none">Spec sheet</a>
+        <button class="btn ghost" id="apps" data-go="sH" data-t="nar.apps">Apps</button>
+      </div>
+    </div>
+  </div>
+  <div class="desk"><b data-t="desk.t">A guided demonstration.</b> <span data-t="desk.p">Tap Next on the phone. Switch to Tonga at the top. What a recorded herd makes possible, screen by screen.</span></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="cow" viewBox="0 0 120 70">
+    <g fill="#1B1711">
+      <polygon points="18,22 34,16 90,16 104,22 104,46 92,46 92,40 30,40 30,46 18,46"/>
+      <polygon points="104,22 118,18 116,24 110,26 112,34 104,34"/>
+      <polygon points="100,12 96,20 104,20"/><polygon points="112,10 114,19 106,20"/>
+      <rect x="24" y="44" width="8" height="22"/><rect x="36" y="44" width="8" height="22"/>
+      <rect x="80" y="44" width="8" height="22"/><rect x="92" y="44" width="8" height="22"/>
+      <polygon points="18,24 10,30 12,40 16,40 14,31 20,28"/>
+      <polygon points="60,16 72,8 84,16"/>
+    </g>
+  </symbol>
+</svg>
+
+<script id="strings" type="application/json">
+{
+  "en": {
+    "app.place": "Pemba, Southern Province",
+    "s0.title": "Eleven million cattle. A billion dollars of beef a year.",
+    "s0.p1": "That is the Grow Zambia cattle goal for 2031. Exports do not buy a herd count. They buy proof, animal by animal: where it was born, what it ate, what it was treated with, where it has been, and that it was never where disease was.",
+    "s0.p2": "This demo shows how that proof gets made, from one herd near Pemba to a carcass in Choma, and what it unlocks on the way.",
+    "s0.start": "The short tour · 12 stops",
+    "s1.title": "The herd",
+    "s1.count": "10 animals",
+    "s1.ok": "all dipped this week",
+    "s2.title": "New calf",
+    "s2.p1": "Born this morning to Nkuku. A photo, a name, two taps.",
+    "s2.photo": "Tap to take the photo",
+    "s2.sex": "Sex",
+    "s2.female": "Female",
+    "s2.male": "Male",
+    "s2.save": "Save the calf",
+    "s2.saved": "Saved. Eleven animals.",
+    "s3.title": "Morning report",
+    "s3.p1": "Mweemba, the herder, six o'clock. Chipego the heifer is coughing and did not eat.",
+    "s3.signs": "What do you see?",
+    "s3.cough": "Coughing",
+    "s3.noeat": "Not eating",
+    "s3.limp": "Limping",
+    "s3.down": "Lying down",
+    "s3.urgent": "Call the vet today.",
+    "s3.urgent2": "Cough and not eating together are an urgent sign. Dr Moonga, Choma: 097 000 0000. The report, the photo and the heifer's history are sent now.",
+    "s3.nodx": "The app never diagnoses. It sorts by urgency and sends.",
+    "s3.seechat": "See the chat",
+    "w.title": "The same report, on WhatsApp",
+    "w.sys0": "This number is registered to Mweemba, herder, Mutinta's herd, Pemba. His rights, no password.",
+    "w.h1who": "Mweemba · 06:04",
+    "w.h1": "Chipego coughing, not eating since yesterday",
+    "w.z1who": "Zamai · 06:04",
+    "w.z1": "Got it, Mweemba. I read this as a sick report. Animal: Chipego, heifer, 2 years, Mutinta's herd, Pemba. Signs: coughing, not eating since Thursday. Is that right? Reply 1 for yes, 2 to change something.",
+    "w.h2who": "Mweemba · 06:05",
+    "w.h2": "1",
+    "w.z2who": "Zamai · 06:05",
+    "w.z2": "One more question. Is any other animal in the kraal coughing or not eating?",
+    "w.h3who": "Mweemba · 06:06",
+    "w.h3": "No only her. She was at Siamundele dip on Tuesday",
+    "w.z3who": "Zamai · 06:06",
+    "w.z3": "Thank you. Report 0417 is filed, with you as the one who saw it, the photo and the time. It goes to Dr Moonga in Choma now, with Chipego's record. Until the vet answers: keep her apart from the herd, water in the shade, do not move or sell any animal. Dr Moonga's reply comes to you here.",
+    "w.sys1": "Report 0417 · 06:06 · seen by Mweemba · Chipego · last dip Siamundele, Tuesday 3 Nov · sent to Dr Moonga",
+    "w.rep.open": "· open the report",
+    "w.rep.title": "Report 0417 · sick report · as filed",
+    "w.rep.k1": "Filed",
+    "w.rep.v1": "06:06 · from WhatsApp",
+    "w.rep.k2": "Seen by",
+    "w.rep.v2": "Mweemba · herder · his number",
+    "w.rep.k3": "Animal",
+    "w.rep.v3": "Chipego · ZM-SP-0416 · heifer, 2 y",
+    "w.rep.k4": "Owner · herd",
+    "w.rep.v4": "Mutinta · Pemba",
+    "w.rep.k5": "Signs",
+    "w.rep.v5": "coughing · not eating since Thu",
+    "w.rep.k6": "Other animals",
+    "w.rep.v6": "none reported",
+    "w.rep.k7": "Last dip",
+    "w.rep.v7": "Siamundele · Tue 3 Nov",
+    "w.rep.k8": "Place",
+    "w.rep.v8": "Mutinta's kraal · on record",
+    "w.rep.k9": "Photo",
+    "w.rep.v9": "1 · hash 9f3a…c21e",
+    "w.rep.k10": "Record hash · previous",
+    "w.rep.v10": "a1c4…7d09 · 77e0…b3f2",
+    "w.rep.k11": "Sent to",
+    "w.rep.v11": "Dr Moonga 06:06 · DVO Pemba 06:06",
+    "w.rep.k12": "Status",
+    "w.rep.v12": "open · awaiting the vet",
+    "w.rep.k13": "Row visible to",
+    "w.rep.v13": "herder · owner · vet · ministry (counts)",
+    "w.rep.note": "Nothing in this report is written by hand. The time and the number come from the message, the animal and the herd from the register, the place from the kraal on record or a location the herder shares, the dip from the dip-day entry. The hash chain means a later change shows.",
+    "w.escwho": "To the district veterinary officer, Pemba · 06:06 · sent at the same time",
+    "w.esc": "Third report in six days of coughing and not eating from herds that use Siamundele dip tank: reports 0402, 0409 and 0417, three kraals within four kilometres, three different animals. All three were dipped there on Tuesday 3 November. Photos and the animals' records attached. Copied to Dr Moonga and the camp officer. The first report went to the vet at once; this is the pattern on top of it.",
+    "w.z4who": "Zamai · 06:07",
+    "w.z4": "Also: two other kraals near you reported the same signs this week. The district veterinary officer has been informed. If she gets worse, or another animal shows the same, send it here at once.",
+    "w.rule": "The rule behind the escalation is plain: three reports with the same signs, three different animals, from herds using one dip tank within seven days. It sits on top of the law, not instead of it: a suspected notifiable disease goes to the veterinary officer at once, under the Animal Health Act. The system reads, asks once, files and forwards. It never diagnoses.",
+    "w.tonga": "In Tonga the same chat runs in Tonga; the English is shown here until the Tonga lines are in.",
+    "nar.sW": "The same morning over WhatsApp. The system reads the photo and the words, asks once, files the report with the herder as the one who saw it, and escalates when the pattern repeats.",
+    "hdr.wa": "WhatsApp · Zamai line",
+    "hdr.wa2": "Mweemba's phone",
+    "s4.title": "The vet replies",
+    "s4.from": "Mweemba · 06:10",
+    "s4.m1": "Chipego: coughing, not eating since yesterday. Photo attached.",
+    "s4.hist": "Record · sent automatically",
+    "s4.m2": "Heifer, 2 years. Dipped weekly, last at Siamundele on Tuesday. Vaccinated May. No other movements. Two similar reports at Siamundele dip tank this week.",
+    "s4.vet": "Dr Moonga, Choma · 07:55",
+    "s4.m3": "Keep her apart from the herd and give water in the shade. Do not sell or move any animal until I have seen her. I will come tomorrow morning.",
+    "s4.visit": "Visit needed",
+    "s4.time": "Answered in under two hours",
+    "s5.title": "Early warning",
+    "s5.p1": "What the camp officer sees on Wednesday.",
+    "s5.alert": "Three reports, one dip tank, five days.",
+    "s5.alert2": "Same signs: cough, not eating. The vet decides what it is; the camp officer has the list of herds that used the tank and the owners' numbers.",
+    "s5.p2": "An outbreak seen on day three instead of week three is the difference between a few animals and a district's markets closed for months. How much it saves is for the pilot to measure.",
+    "s6.title": "Dip day",
+    "s6.rem": "Reminder · Friday",
+    "s6.rem2": "Siamundele dip tank, 07:00. Vaccination for the herds around the tank, by the camp officer.",
+    "s6.p1": "After the tank, one tap for the whole herd.",
+    "s6.btn": "Dipped: 11 present",
+    "s6.done": "11 animals recorded as dipped, by name. The vaccination is a separate entry: product, batch, date, who gave it. The campaign then knows which animals, not how many doses.",
+    "s7.title": "Selling two steers",
+    "s7.p1": "What steers of this class fetched within 30 km, last 30 days. Illustrative prices.",
+    "s7.c1": "Auction, Choma",
+    "s7.c2": "Cooperative sale",
+    "s7.c3": "Trader at the kraal",
+    "s7.card": "The trader offered K 6,800.",
+    "s7.card2": "Mutinta knows what the steers are worth and what the auction paid last week. If she can wait, she waits; if she must sell today, she sells knowing the price, not guessing it. The trader knows she knows.",
+    "s7.p2": "Prices pooled from members' own sale records and the auction list. Median, by class and weight band.",
+    "s8.title": "The record travels",
+    "s8.class": "steer, 3 years",
+    "s8.id": "ID ZM-SP-0417",
+    "s8.r1": "Born here, Pemba",
+    "s8.r2": "Dipped weekly, 2024 to 2026",
+    "s8.r3": "Vaccinated, last on Friday",
+    "s8.r4": "No recorded presence in a restricted zone",
+    "s8.r5": "Sold to the abattoir, Choma",
+    "s8.today": "today",
+    "s8.p1": "This record is what lets the abattoir sell into a market that pays for proof. The export target needs it on every animal.",
+    "g.title": "Breeding, from the record",
+    "g.p1": "After a year of calves, weanings and losses, the record keeps what the owner knows from memory today, and compares it across years, herds and bulls: which cows deliver, which bulls' calves grow, which lines to keep.",
+    "g.cows": "Cows",
+    "g.c1": "calf 2026 · weaned 7 mo · 142 kg",
+    "g.c2": "calf 2025 · lost at 2 months",
+    "g.flag": "flag",
+    "g.c3": "no calf since 2024",
+    "g.c4": "calf 2026 · difficult birth · vet",
+    "g.cowsnote": "A cow with no calf in two seasons, a calf lost, a difficult birth: each is one entry at the time, and together they show which mothers carry the herd and which cost it. The owner decides; the record shows.",
+    "g.bulls": "Bulls, by their calves",
+    "g.b1": "6 calves · 5 weaned",
+    "g.b2": "4 calves · 2 weaned",
+    "g.bullsnote": "Weaning weight and survival by sire, with the dam, the season and the feed beside them, because six calves against four proves little on its own. Several seasons of this, across herds, and a bull's record starts to mean something.",
+    "g.wean": "Weaning",
+    "g.w1": "Weaned · one tap at about seven months",
+    "g.w1b": "Weight from the crush where there is one, from the standard picture later. The weaning weight is the first outcome a sire can be judged by, long before the abattoir.",
+    "g.prov": "The gene pool of the province",
+    "g.pv1": "Herd by herd, and all herds together",
+    "g.pv1b": "The same record across thousands of herds shows the province which lines survive drought and disease, which grow, which calve every year, and where a single line dominates because it is the only bull in reach. Farmer-agreed breeding objectives then guide voluntary selection and replacement: proven sires and community bulls where they are missing, independent advice, and protection of the locally adapted lines, which are the province's capital. The owner decides for the herd; the province sees the pattern and acts on it.",
+    "g.goal": "That is the breeding goal: a better Southern Province herd, built one herd at a time, from the farmers' own knowledge with records beside it.",
+    "nar.sG": "A year of entries becomes breeding knowledge: which cows deliver, which bulls' calves grow, and what the province can do with the whole picture.",
+    "s9.title": "Southern Province, this week",
+    "s9.n1": "Rule: three reports, same signs, one dip tank, seven days. Each cluster carries its reports, photos and the animals' movement history. Markets around an open cluster are flagged before any sale.",
+    "s9.n2": "Reg.: animals with a record. Dip: registered animals dipped in the last 14 days. Mort.: deaths recorded in registered herds, twelve months. Export: animals with a complete movement history outside any restricted zone. Where registration is high, mortality is low: the record and the dip tank arrive together.",
+    "s9.n3": "The gene-pool view: where calving is low, where weaning survival is low, where a single line dominates. Places for proven sires and community bulls, under breeding objectives the farmers agreed, with independent advice.",
+    "s9.p1": "Steer, 3 y",
+    "s9.again": "Walk the week again",
+    "nar.back": "Back",
+    "nar.next": "Next",
+    "pend": "Tonga text: {n} of {m} lines in. English is shown where Tonga is missing.",
+    "desk.t": "A guided demonstration.",
+    "desk.p": "Tap Next on the phone. Switch to Tonga at the top. What a recorded herd makes possible, screen by screen.",
+    "cls.cow": "cow",
+    "cls.heifer": "heifer",
+    "cls.steer": "steer",
+    "cls.bull": "bull",
+    "cls.calf": "calf",
+    "cls.ox": "ox",
+    "s0.plan": "Straight to the plan",
+    "s0.install": "Install on this phone",
+    "p0.title": "The idea",
+    "p0.p1": "A picture of an animal, taken the same way every time, paired with what happened to that animal: its weight, its health, what its carcass weighed and graded. Enough pairs, and a model learns to read the picture.",
+    "p0.l1": "Picture, standard angle",
+    "p0.r1": "the input",
+    "p0.l2": "Weight, condition, health, origin",
+    "p0.r2": "the record",
+    "p0.l3": "Carcass weight and grade",
+    "p0.r3": "the outcome",
+    "p0.p2": "That is how a breeder works: select on what you can see, check against what you get. The feedlot and the abattoir already produce the outcomes. What is missing is the standard picture and the link.",
+    "p0.p3": "Nothing here needs a model that exists yet. Phase one collects the pairs. The models come from the pairs.",
+    "p1.title": "Phase 1 · At the feedlot gate",
+    "p1.p1": "Every animal that arrives passes the crush pen. One person, one phone, three minutes.",
+    "p1.photos": "Standard pictures",
+    "p1.above": "From above, in the crush",
+    "p1.side": "From the side, full length",
+    "p1.weight": "Weight at arrival",
+    "p1.scale": "from the scale",
+    "p1.cond": "Condition",
+    "p1.age": "Age, if known",
+    "p1.unknown": "?",
+    "p1.origin": "Where from",
+    "p1.other": "Other",
+    "p1.health": "Health at the gate",
+    "p1.h0": "Nothing seen",
+    "p1.h1": "Ticks",
+    "p1.h2": "Wound",
+    "p1.h3": "Cough",
+    "p1.save": "Admit · ZM-FL-0088",
+    "p1.saved": "Admitted. The record starts.",
+    "p2.title": "Phase 1 · During the stay",
+    "p2.p1": "A fixed camera over the feed bunk and one over the crush. The same animal, the same angle, every day for ninety days. Weighed at the crush every two weeks.",
+    "p2.days": "day 1 to 90",
+    "p2.cap": "Illustrative. Four of ninety pictures, with the scale readings they pair with. Real pictures go here.",
+    "p2.p2": "The pairs are the product of this phase: picture and weight, picture and condition, day after day. Feed rations and treatments go into the same record.",
+    "p3.title": "Phase 1 · At the abattoir",
+    "p3.p1": "A camera at the lairage, the same standard angle. Then the carcass data the abattoir already records.",
+    "p3.l1": "Live weight at exit",
+    "p3.l2": "Carcass weight, cold",
+    "p3.l3": "Dressing",
+    "p3.l4": "Grade and fat class",
+    "p3.l5": "Condemned",
+    "p3.none": "none",
+    "p3.learn": "What the model learns from this one animal",
+    "p3.learn2": "Ninety pictures, seven weights, one carcass. From a thousand animals: weight and condition from a photo at the gate, and a carcass estimate from the live animal. Checked against the scale before anyone relies on it.",
+    "p3.p2": "Illustrative numbers and pictures. The dressing percentage and grades are the abattoir's own.",
+    "p4.title": "Phases 2 and 3",
+    "p4.a": "Phase 2 · Sale pens and dip tanks",
+    "p4.a2": "The same standard picture at the auction and at the dip tank. Paired with sale prices and with health events. The weight-from-a-photo model, now checked, lets a farmer see an estimate before the trader names a figure.",
+    "p4.b": "Phase 3 · The herd app, in Tonga",
+    "p4.b2": "What the first part of this demo showed. Owners, herders, a vet in the loop, early warning, the record that travels. Built on the records and models the first two phases produced.",
+    "p4.p1": "Each phase pays for the next with what it learns. None of them needs the one after it to be useful.",
+    "p5.title": "What could be done first",
+    "p5.l1": "One feedlot and one abattoir that agree to take part",
+    "p5.r1": "partners",
+    "p5.l2": "Two fixed cameras, a phone at the crush, the scale that is already there",
+    "p5.r2": "kit",
+    "p5.l3": "One person at intake, trained in an afternoon",
+    "p5.r3": "people",
+    "p5.l4": "The intake form, the record, the carcass link",
+    "p5.r4": "software, this",
+    "p5.l5": "One feedlot cycle, about ninety days, then the first model check",
+    "p5.r5": "time",
+    "p5.p1": "The first cycle produces nothing a farmer sees. It produces the pairs. The second cycle produces the first number anyone can check against a scale. That is the gate to everything after.",
+    "p5.p2": "The animal identification law and the export roadmap both ask for exactly these records.",
+    "p1.example": "In the crush: same place, same angle, every animal.",
+    "p1.ex2": "2 · thin, ribs and hips showing",
+    "p1.ex4": "4 · well covered",
+    "nar.s0": "Part one, the vision. Eleven million cattle and a billion dollars of beef a year need proof on every animal. The short tour is fifteen minutes; the full walk shows every screen.",
+    "nar.s1": "Part two, one herd and one week. Mutinta's ten cattle near Pemba: every animal has a name, a photo and a record. Tap an animal.",
+    "nar.s2": "A calf born this morning is registered in a minute. No typing: pictures and taps. Try it.",
+    "nar.s3": "The herder reports at six. Tap the signs you see. If a sign is urgent, the app says so. It never diagnoses.",
+    "nar.s4": "By eight a vet in Choma has seen the photo and the heifer's history. The answer comes back in Tonga.",
+    "nar.s5": "Three reports round one dip tank is a pattern. The camp officer sees it days before an outbreak is declared.",
+    "nar.s6": "Dip and vaccination reminders reach every owner. The campaign becomes a list of animals, not a count of doses.",
+    "nar.s7": "Before the trader arrives, Mutinta knows the price. She sells at the fair price, or waits for the auction.",
+    "nar.s8": "Mwiinga is sold. His record goes with him to the abattoir: born here, dipped, vaccinated, never in quarantine.",
+    "nar.s9": "The ministry's screen. Counts, coverage, clusters, movements, breeding and prices for a province, every number a sum over rows that farmers, herders, vets and abattoirs wrote. That is the end of the week.",
+    "nar.s10": "The idea behind the models: a standard picture, paired with what happened to the animal. Phase one collects the pairs.",
+    "nar.s11": "Phase one starts where the outcomes already exist: a feedlot. Fill in the gate form; this is the whole job at intake.",
+    "nar.s12": "During the stay the cameras do the work. Picture and weight, day after day. These pairs are what the models are made of.",
+    "nar.s13": "The abattoir closes the loop: the carcass is the outcome every earlier picture now points to.",
+    "nar.s14": "Phase two takes the checked model to the sale pen and the dip tank. Phase three is the herd app you saw first.",
+    "nar.s15": "What could be done first: two partners, two cameras, one person, one cycle of ninety days.",
+    "a.title": "One animal, one record",
+    "a.p1": "The approach is quality data on the individual animal, kept from birth to carcass. Not a district count. Five things, every time, the same way.",
+    "a.l1": "Picture, standard angle",
+    "a.r1": "what it looks like",
+    "a.l2": "Weight and condition",
+    "a.r2": "what it is worth",
+    "a.l3": "Health, treatments, vaccinations",
+    "a.r3": "what was done",
+    "a.l4": "Movements, with dates",
+    "a.r4": "where it has been",
+    "a.l5": "Carcass weight and grade",
+    "a.r5": "what it became",
+    "a.p2": "Most of what an export market asks for is in that list, and most of what a farmer, a vet, a trader and a lender ask for. The same record serves all of them, which is why it can be kept.",
+    "a.p3": "The records are held by the system under terms the owner accepts at registration. The owner sees and corrects their own animals' records and has a say over who else sees them.",
+    "b.title": "What it unlocks, if done right",
+    "b.1": "Export, animal by animal",
+    "b.1b": "Today one outbreak closes a whole district. With a movement record, the animal from the clean kraal can show the veterinary service where it has been and where it has not, which is what any release decision rests on.",
+    "b.2": "A fair price",
+    "b.2b": "Weight and condition known before the trader arrives. What steers like this fetched nearby this month. The farmer bargains with the number in hand.",
+    "b.3": "Disease stopped early",
+    "b.3b": "Sick reports with place and date cluster on a map days before an outbreak is declared. A vet sees the cluster and decides what it is and what to do; the record shows who was exposed.",
+    "b.4": "Cattle that banks can see",
+    "b.4b": "A recorded, vaccinated, traceable animal is an asset that can be insured and lent against. Fourteen billion kwacha of living capital in Southern Province alone, almost none of it bankable today.",
+    "b.5": "Breeding on outcomes",
+    "b.5b": "When pictures are paired with weights and carcasses, the breeder's own judgement gets numbers beside it and reaches across herds. The breeder's method, at the scale of a province.",
+    "c.title": "Where it has been",
+    "c.p1": "Mwiinga, steer, ID ZM-SP-0417. Every movement, with a date. This is the export question answered.",
+    "c.ok": "Records ready for veterinary export review",
+    "c.v": "No recorded presence in a restricted zone. Vaccinations on record. Every movement in the last ninety days recorded.",
+    "c.v2": "The same check shows what is missing for an animal that passed through the zone in March, and sends the file to the veterinary officer who decides. The record does not grant eligibility; it makes the decision fast and checkable.",
+    "c.p2": "Movements come from the dip tank, the sale pen, the feedlot gate and the abattoir, each already a place the animal passes. Illustrative map.",
+    "nar.sA": "The approach in one screen: five things recorded on the individual animal, the same way every time.",
+    "nar.sB": "What quality data unlocks: export by animal, a fair price, outbreaks stopped early, bankable cattle, breeding on outcomes.",
+    "nar.sC": "And that record answers the first export question: where he has been, and where he has not, for the officer who decides.",
+    "s2.mother": "Mother",
+    "s2.sire": "Sire",
+    "s2.sire1": "· own bull",
+    "s2.sire2": "· own bull",
+    "s2.sire3": "Another bull",
+    "s2.sire4": "Not sure",
+    "s2.sirenote": "The owner usually knows which bull served the cows; the bulls come from the bull register. Where herds mix and the owner is not sure, the record keeps every bull that was with the herd that season as a candidate, and says so. Parentage is confirmed only by a controlled mating or a DNA test; the calf's looks never settle it.",
+    "s2.born": "Born today",
+    "s2.bornwhere": "Pemba, in the kraal",
+    "p3.hero": "ZM-FL-0088: at the gate on day one, on the hook on day ninety. The picture now has its answer.",
+    "p3.pair": "The pair the model learns from",
+    "p3.pair1": "Thin at the gate, lean on the hook",
+    "p3.pair2": "Well covered at the gate, finished on the hook",
+    "t.title": "How it is built",
+    "t.1": "One database, many small apps",
+    "t.1b": "The herder's phone, the vet's desk, the feedlot gate, the abattoir and the export check are different apps reading and writing the same record. Nothing is copied between systems, so nothing drifts apart.",
+    "t.2": "Each row knows who may see it",
+    "t.2b": "Row-level security: an owner sees their own animals, a herder the ones in their care, a vet the cases reported to them and what the law gives them, the abattoir only the animals delivered to it. The rule sits on the data, not in the app, so no app can get round it; the service keys that can are few, logged and audited.",
+    "t.3": "Every entry is stamped",
+    "t.3b": "Each entry carries a hash: a fingerprint of its content and of the entry before it, with the time and the person. Change an entry later and every stamp after it breaks. Enter the same picture twice and its fingerprint is already there, so the double is refused.",
+    "t.4": "Works without signal",
+    "t.4b": "Records are written on the phone first and sent when there is signal. Entries are added, never overwritten, so two people recording the same animal do not undo each other.",
+    "t.p1": "Nothing exotic. It is the way a careful business keeps its books today, applied to cattle.",
+    "nar.sT": "How it is built: one database under many small apps, each row knowing who may see it, every entry stamped and chained, WhatsApp as one way in, Tonga read by a small local model inside a harness, and it works without signal.",
+    "app.name": "Ng'ombe",
+    "hdr.owner": "Owner app · Mutinta's herd",
+    "hdr.owner2": "Pemba, Southern Province",
+    "hdr.herder": "Herder app · Mweemba",
+    "hdr.herder2": "Mutinta's herd, Pemba",
+    "hdr.vet": "Vet app · Dr Moonga",
+    "hdr.vet2": "Choma district",
+    "hdr.ministry": "Ministry of Livestock app",
+    "hdr.ministry2": "Southern Province",
+    "hdr.feedlot": "Feedlot app · Pemba feedlot",
+    "hdr.feedlot2": "intake and stay",
+    "hdr.abattoir": "Abattoir app · Choma",
+    "hdr.abattoir2": "the carcass",
+    "nar.apps": "Apps",
+    "h.title": "One database, six apps",
+    "h.p1": "Each app is small and shows one role its own rows. Tap a screen to open it. Each can also take its entries from WhatsApp or SMS where that fits better than a screen.",
+    "h.1": "Herder app",
+    "h.1b": "Sees the animals in their care. Not the owner's money, unless the herder and the owner are the same person, which is often.",
+    "h.1x": "Morning report",
+    "h.1y": "Dip day",
+    "h.2": "Owner and rancher app",
+    "h.2b": "Sees their own animals, prices and money. Sells from the record.",
+    "h.2x": "The herd",
+    "h.2y": "New calf",
+    "h.2z": "Selling",
+    "h.2w": "The record",
+    "h.3": "Feedlot app",
+    "h.3b": "Sees the animals on the lot and what the owner allows of their history. Writes weights and pictures.",
+    "h.3x": "The gate",
+    "h.3y": "The stay",
+    "h.4": "Abattoir app",
+    "h.4b": "Sees only the animals delivered. Writes the carcass, the outcome every earlier entry points to.",
+    "h.4x": "The carcass",
+    "h.5": "Vet app",
+    "h.5b": "Sees the cases sent to them, with history, and the clusters in their area.",
+    "h.5x": "A case",
+    "h.5y": "Early warning",
+    "h.6": "Ministry of Livestock app",
+    "h.6b": "Sees counts, coverage, movements and the export check. Never a farmer's money.",
+    "h.6x": "The province",
+    "h.6y": "Export check",
+    "h.p2": "Same database, different rows. The rule that decides who sees what sits on the data, so adding the seventh app does not reopen the first six.",
+    "nar.sH": "Part three, the plan. Not one app but six small ones on one database: herder, owner, feedlot, abattoir, vet, ministry. Each sees its own rows.",
+    "p2.goal": "What the feedlot camera view becomes once the models exist: each animal recognised, its estimated weight beside it. An illustration of the goal, not a screenshot.",
+    "p4.dip": "The dip tank camera. Every animal that passes the race is recognised and its presence recorded; what it was dipped or vaccinated with is entered by the person who did it. The dip tank becomes the village's data point.",
+    "v.title": "Where the value is",
+    "v.p1": "Not everything on these screens is worth building first. The order below follows the money and the losses, not the pictures.",
+    "v.1": "1 · Disease stopped early",
+    "v.1b": "The largest prize: each point of mortality in Southern Province is about 17,500 animals a year. Needs sick reports with place and date reaching a vet, and vaccination as a list of animals. Open: if vaccines, dip chemicals or vets are the shortage, information moves nothing. Option: start with the camp officer's reports, not the herder's phone.",
+    "v.2": "2 · Proof for export",
+    "v.2b": "The law for identification exists and has reached a tenth of its target. Needs tags issued and a movement record written at the dip tank, the sale pen and the gate. Open: who runs the mandated system, and whether a second tool is welcome. Option: build the record layer under that system, never beside it.",
+    "v.3": "3 · A fair price",
+    "v.3b": "Needs pooled sale records by class and weight band. Open: whether sellers will share what they got. Option: start from auction lists, which are public, and add members' sales later.",
+    "v.4": "4 · Cattle that banks can see",
+    "v.4b": "Needs the record first, then a lender or insurer willing to act on it. Open: nobody has yet paid for this. Option: a cooperative lending against its own members' recorded animals, before any bank.",
+    "v.5": "5 · Weight from a photo, breeding on outcomes",
+    "v.5b": "The part that looks best and is worth least today. It needs the gate-to-hook pairs of phase one before it exists at all. Open: accuracy in a Zambian crush pen. Not first.",
+    "v.build": "What must be built, and nothing more",
+    "v.buildb": "The intake form. The record store with its row rules and stamps. The sick report to a vet and the vet's reply. The movement entry at the dip tank. That is the whole first build. Muzzle identification, camera views and breeding models wait for the pairs.",
+    "v.open": "The questions that decide it",
+    "v.q1": "Who pays after the pilot: government, buyers, lenders, insurers, or the farmers",
+    "v.q2": "Will herders keep using it without being chased. Use is the only verdict",
+    "v.q3": "Does the veterinary department want herders' reports, or would they burden it",
+    "v.q4": "Is information the missing link, or vaccines, dip and vets",
+    "v.q5": "WhatsApp as the front door, or an app; the camp officer first, or the herder",
+    "v.p2": "The value is where a record changes what someone does: a vet who comes, a buyer who pays for proof, an outbreak that stops at four. Build there first.",
+    "v.again": "Back to the start",
+    "nar.sV": "Where the value is, ranked by losses and money, with what each needs and what is open. Then the week, to see it made.",
+    "d.events": "What was done",
+    "d.sick": "Report sick",
+    "d.where": "Where it has been",
+    "d.sell": "Sell",
+    "d.st.sick": "Sick report today",
+    "d.st.new": "Born today",
+    "d.st.ok": "Dipped, vaccinated",
+    "d.owner": "Owner",
+    "d.born": "Born",
+    "d.mother": "Mother",
+    "d.weight": "Last weight",
+    "d.dipped": "Dipped",
+    "d.thisweek": "this week",
+    "d.vacc": "Vaccinated",
+    "d.moves": "Movements",
+    "d.none": "none, Pemba",
+    "d.noevents": "Nothing recorded yet",
+    "ev.dip": "Dipped at Siamundele",
+    "ev.vacc": "Vaccinated, camp officer",
+    "ev.calved": "Calved",
+    "ev.sickrep": "Sick report sent to Dr Moonga",
+    "ev.weighed": "Weighed at the crush",
+    "ev.bullcheck": "Bull check, vet",
+    "ev.born": "Born, registered by Mweemba",
+    "nar.sD": "One animal, its whole record: who owns it, what was done and when, where it has been. Everything else in the demo reads from this.",
+    "v.spec": "The spec sheet",
+    "v.specb": "What would be needed, from what runs today to what must be researched, with the open questions and the options.",
+    "v.specpdf": "Download the PDF",
+    "v.specweb": "Read it here",
+    "h.spec": "The spec sheet (PDF): what would be needed",
+    "t.0": "WhatsApp as one front door",
+    "t.0b": "An option we offer because it is proven in daily use and makes usage natural: people already send photos and messages on WhatsApp, and the system reads them and makes the entry. A photo and \"Chipego coughing, not eating\" becomes a sick report with the time, the place and the animal, and goes to the vet. Dip day is one message: \"dipped all\". The sender's number is the login: each number is registered to one person, so a message arrives with that person's rights and no password. Nobody has to install anything to start. If WhatsApp is not wanted, for data security for instance, the same chat becomes a dedicated app of our own: the same messages, the same entries, on servers in Zambia.",
+    "s3.wa": "Or on WhatsApp, the same morning",
+    "s3.wa2": "A photo and \"Chipego coughing, not eating since yesterday\". The system makes the same entry from the message and asks one question if something is missing.",
+    "s9.p0": "Provincial Veterinary Officer's view. Week 45. Numbers illustrative; the shape is what the record produces.",
+    "s9.k1": "cattle (ZamStats 2024)",
+    "s9.k2": "registered · 24%",
+    "s9.k3": "herds with a record",
+    "s9.k4": "dip tanks reporting",
+    "s9.k5": "FMD vaccination, registered herd",
+    "s9.k6": "sick reports, 7 days",
+    "s9.k7": "clusters open",
+    "s9.k8": "movements recorded, 7 days",
+    "s9.k9": "export-eligible animals",
+    "s9.h1": "Disease · open clusters",
+    "s9.t1a": "Place",
+    "s9.t1b": "Reports",
+    "s9.t1c": "Signs",
+    "s9.t1d": "Status",
+    "s9.r1c": "cough, not eating",
+    "s9.r1d": "DVO Pemba · visit Fri",
+    "s9.r2c": "skin nodules",
+    "s9.r2d": "vaccinating",
+    "s9.r3c": "limping",
+    "s9.r3d": "watch",
+    "s9.h2": "Districts",
+    "s9.t2a": "District",
+    "s9.t2b": "Cattle",
+    "s9.t2c": "Reg.",
+    "s9.t2d": "Dip",
+    "s9.t2e": "Mort. 12 m",
+    "s9.t2f": "Export",
+    "s9.more": "7 more districts",
+    "s9.h3": "Movements and export · 7 days",
+    "s9.t3a": "Flow",
+    "s9.t3b": "Animals",
+    "s9.t3c": "Of which blocked",
+    "s9.m1": "Kraal to dip tank",
+    "s9.m2": "To sale pens and auctions",
+    "s9.m2b": "· from a cluster zone",
+    "s9.m3": "To feedlots",
+    "s9.m4": "To abattoirs",
+    "s9.m5": "Across the district line",
+    "s9.m5b": "· no permit on record",
+    "s9.h4": "Breeding · registered herds, 12 months",
+    "s9.b1": "cows with a calf this year",
+    "s9.b2": "calves reaching weaning",
+    "s9.b3": "median weaning weight",
+    "s9.b4": "cows with no calf in 2 seasons",
+    "s9.b5": "sires with 5+ recorded calves",
+    "s9.b6": "districts with one bull per 60+ cows",
+    "s9.h5": "Prices · median, this week",
+    "s9.t4a": "Class",
+    "s9.t4e": "vs 4 wks",
+    "s9.p2": "Cow, in calf",
+    "s9.p3": "Weaner",
+    "s9.p4": "Carcass, per kg CDM",
+    "s9.h6": "This week's list",
+    "s9.l1": "Siamundele: vaccination Friday 07:00, 11 herds, 640 animals; vet visit Thu",
+    "s9.l1r": "open",
+    "s9.l2": "Simwatachela: ring vaccination, 1,900 animals, 3 days; movement stop in force",
+    "s9.l2r": "open",
+    "s9.l3": "97 dip tanks not reporting for 14 days: camp officers to call the committees",
+    "s9.l3r": "task",
+    "s9.l4": "Namwala, Itezhi-tezhi: registration drives before the rains",
+    "s9.l4r": "plan",
+    "s9.l5": "Export audit: 96 k eligible animals, 21 k in Choma; abattoir capacity the limit",
+    "s9.l5r": "note",
+    "s9.n4": "Counts, coverage, movements, clusters, prices. Never a farmer's money. In the working system every number on this screen is a sum over rows the farmers, herders, vets and abattoirs wrote; the numbers here are illustrative.",
+    "d.sire": "Sire",
+    "d.today": "Today",
+    "d.atbirth": "Pemba · recorded at birth",
+    "d.about": "about",
+    "d.byteeth": "by teeth, at registration",
+    "g.score": "Breeding score, worst first",
+    "g.s.a": "Animal",
+    "g.s.b": "Score",
+    "g.s.c": "What pulls it down, or up",
+    "g.s1": "no calf 2 seasons · thin by October",
+    "g.s2": "2 of 4 calves weaned · light weaners",
+    "g.s3": "calf lost 2025 · calved 2023, 2025",
+    "g.s4": "strong draught · not for breeding",
+    "g.s5": "calf every year · heavy weaners · held condition in the 2024 drought",
+    "g.s6": "5 of 6 weaned · 138 kg average · no sick report in 3 years",
+    "g.scorenote": "The score is a sum over the record with the weights in the open: calving, weaning weight and survival of offspring, condition through the dry season, treatments, and later carcass grades of relatives. The weights express a breeding goal the farmers agreed, and every animal shows why it scores as it does. Sort worst first and you have a list to look at first, not a cull list: a cow without a calf may be pregnant, newly bought, badly fed, or served by a bull that failed. The owner decides.",
+    "g.traits": "Wanted traits, as the record can see them",
+    "g.lines": "Lines: the question for the breeders",
+    "g.ln1": "Fixed point: for export, meat quality is cardinal.",
+    "g.ln1b": "A premium line that responds to the feedlot and grades high at the hook is what a billion dollars of beef is made of. The question is what sits beside it.",
+    "g.ln2": "Option A. One main line, dual or triple purpose, meat, milk and draught in the village herd, and a premium beef line above it, bred from the animals the record ranks highest for growth and carcass.",
+    "g.ln3": "Option B. Separate strains from the start: predominantly meat, predominantly milk, draught, each with its own score and its own sires.",
+    "g.ln4": "Option C. Improve within the locally adapted populations, with terminal crossing for the feedlot where it pays and the adapted mothers kept. The record does not decide this; breeders and the ministry do. What the record gives them is the ranking under any of the three, from outcomes, and the proof the buyer asks for.",
+    "g.t1": "Hardiness",
+    "g.t1r": "condition held through the dry season · calved under village conditions · came through tick season with few treatments",
+    "g.t2": "Fertility",
+    "g.t2r": "a calf every year · calf alive at weaning",
+    "g.t3": "Growth",
+    "g.t3r": "weaning weight · gain in the feedlot",
+    "g.t4": "Meat quality",
+    "g.t4r": "carcass weight and grade of the animal and its relatives",
+    "g.t5": "Milk",
+    "g.t5r": "calf growth to weaning, read with care · household milk entries",
+    "g.t6": "Draught",
+    "g.t6r": "work days and the condition after them · soundness · temperament",
+    "e.title": "The economics, as a cattle man reads them",
+    "e.p0": "One smallholder herd of twelve cows, then the province, then the export sum. Government's own baseline and targets; the kwacha figures are derived from a working value of K8,000 a head, which a herd-weighted check puts at about K8,500 (oxen and cows above, calves and weaners below; the abattoir price behind it is unpublished), and are marked so.",
+    "e.h1": "One herd · twelve breeding cows · a year",
+    "e.t1b": "Today",
+    "e.t1c": "At target",
+    "e.t1d": "Difference",
+    "e.r1": "Calving rate",
+    "e.r2": "Calves born",
+    "e.r3": "Mortality, whole herd of 30",
+    "e.r4": "Animals lost",
+    "e.r5": "Births minus deaths, before sales",
+    "e.r6": "Value of the difference at K8,000 a head, derived; not cash, not profit",
+    "e.n1": "At the baseline the herd stands still: the calves born barely replace the animals that die. At the target the increase is a tenth of the herd a year, to keep or to sell. Nothing in this table needs a feedlot or an exporter; it needs calves alive and animals not dying, which is grazing and water through the dry season, dipping, vaccination, a vet who answers, and a bull that works. The herd of thirty is an illustration, not Mutinta's ten.",
+    "e.h2": "Where the kwacha leak",
+    "e.l1": "Dry-season selling: condition falls, price falls with it. 96 percent of the respondents in a Mazabuka study make that link.",
+    "e.l1r": "size OPEN",
+    "e.l2": "The trader knows the price, the seller does not. The gap between the farm-gate price and the pooled local price.",
+    "e.l2r": "OPEN",
+    "e.l3": "A death: the whole animal, at once. One point of mortality in the province is about 17,500 animals a year.",
+    "e.l3r": "~K140 m / pt",
+    "e.l4": "An outbreak: forty animals and a district's markets closed for months. Prices in the closed zone fall; nothing moves.",
+    "e.l4r": "months",
+    "e.l5": "No proof: an animal without a history sells as a local animal, never as an export animal.",
+    "e.l5r": "the premium",
+    "e.h3": "The province",
+    "e.k1": "cattle (ZamStats 2024)",
+    "e.k2": "living capital at K8,000 a head, derived; herd-weighted check K8,500",
+    "e.k3": "mortality, baseline to target (PDU)",
+    "e.k4": "calving rate, baseline to target (PDU)",
+    "e.k5": "animals a year saved at 5% mortality, derived",
+    "e.k6": "a year, from mortality alone, derived",
+    "e.h4": "The export sum",
+    "e.t2a": "Step",
+    "e.t2b": "Figure",
+    "e.t2c": "Source",
+    "e.x1": "The goal",
+    "e.x1s": "President, 9 Oct 2026",
+    "e.x2": "At US$4 to 8 a kilogram, carcass-weight equivalent",
+    "e.x2s": "Zambia's 2025 exports: 971 t, US$3.79/kg frozen to the DRC; Saudi imports US$4.44 frozen, US$6.20 chilled (2024); EU about €6.35/kg carcass (Comtrade, SFDA data, EU prices)",
+    "e.x3": "At 220 kg a carcass",
+    "e.x3s": "derived",
+    "e.x4": "Export offtake that implies, on 11 m, before domestic slaughter",
+    "e.x4s": "derived",
+    "e.x5": "Animals with an identity, as reported for November 2024",
+    "e.x5s": "Act No. 2 of 2024, progress reported",
+    "e.n2": "A million export animals a year need a million histories: born where, dipped when, moved through which zone, graded what at the hook. The feedlot and the abattoir are the last two entries; the first entries are made at the kraal and the dip tank, by the people in this demo. The herd grows to the target only if calving goes up and deaths go down first, and export offtake comes out of the same increase that domestic slaughter and replacement heifers come out of; the export sum rides on the herd sum.",
+    "e.n3": "Sources: ZamStats 2024 Integrated Agricultural Survey; Presidential Delivery Unit beef export page; the President's address of 9 October 2026; the Animal Identification and Traceability Act No. 2 of 2024; the Mazabuka drought-coping study. Working price and all derived figures are ours and are marked.",
+    "nar.sE": "The sums a cattle man checks first: one herd at the baseline and at the target, where the kwacha leak, the province, and what a billion dollars of beef needs in animals and histories.",
+    "nar.spec": "Spec sheet",
+    "s0.spec": "What would be needed: the spec sheet, with the open questions and the options",
+    "s0.specpdf": "PDF",
+    "q.title": "Local AI can do wonders. On quality data.",
+    "q.p1": "The models in this demo are not bought; they are grown here, on Zambian animals, on our own machine, and the arrangement for who owns them is set out in the spec sheet. Our Tonga translator was made that way, from printed books and paid speakers, for a few hundred dollars. Reading a muzzle, estimating a weight and spotting a cluster are different problems with different tests, but the discipline is the same, and each works to the exact degree that the data are good.",
+    "q.h1": "What quality means, entry by entry",
+    "q.t1a": "Entry",
+    "q.t1b": "Good means",
+    "q.e1": "Standard picture",
+    "q.e1b": "head restrained · same angle and distance · shade, no flash · the sharpest of a burst · rejected and retaken on the spot",
+    "q.e2": "Weight",
+    "q.e2b": "a calibrated scale · same time of day · the picture taken at the same moment, or the pair is worthless",
+    "q.e3": "Identity",
+    "q.e4": "Health",
+    "q.e4b": "signs from a fixed list, with the photo · the vet's finding closes the case · confirmed cases become training data, suspicions do not",
+    "q.e5": "Events",
+    "q.e5b": "at the time, by the person who saw it · time and place from the phone · one tap, no typing",
+    "q.e6": "Carcass",
+    "q.e6b": "weight and grade by a trained inspector · linked to the tag at the lairage, before the hide comes off",
+    "q.h2": "How to get it: not yet clear, and that is the first work",
+    "q.w1": "Procedures: one page per entry, a guide on the screen, a quality check on the phone that flags a bad picture and asks for another; a sick report is never refused for a poor photo",
+    "q.w2": "Training: meat inspectors, dip-tank recorders, camp officers and herders, trained on the procedure, tested, retrained; paid per entry that passes verification, as our Tonga desk pays per line",
+    "q.w3": "Tests: a second recorder on a sample of entries, agreement measured; a phase-zero trial of fifty animals, three photos each on two days, before any model is trained",
+    "q.w4": "The loop: the model's errors go back to the recorders as training, every month; the data get better because the model shows where they are bad",
+    "q.p2": "None of these procedures exists yet for Zambian cattle. They have to be written, tried at one dip tank and one abattoir, and changed by what breaks. That is cheaper than any camera, and no model is worth anything before it is done.",
+    "nar.sQ": "The condition for all of it: quality data. What good means for each entry, and the procedures and trainings that do not exist yet and come first.",
+    "s8.muzzle2": "Animal identity is the goal; the tag under the 2024 Act is the proof we have. The muzzle pattern is an idea: unique like a fingerprint, independent of the coat, free per animal. Whether it can be photographed well enough by a herder at a dip tank, in dust, sun and movement, nobody has shown yet.",
+    "s8.p2b": "So it is not promised here. It is tested first: pictures of the same animals in different settings and light, by different people, and a check whether day two matches day one. Feasible, and at what cost in time, or not. Until then: tag, photo, and a person who confirms.",
+    "q.e3c": "tag read by the phone · a person who confirms · the muzzle only if the test shows it works",
+    "d.notyet": "not yet",
+    "s3.dead": "Found dead",
+    "s3.deadrule": "Do not open or move the carcass. Keep people and dogs away. Report now.",
+    "s3.deadrule2": "Sudden death with blood from the nose or mouth can be anthrax, which kills people. The report goes to the vet at once, ahead of any cluster rule.",
+    "s0.full": "The full walk · 28",
+    "pl.title": "What we have, and what we suggest",
+    "pl.p1": "What we have is the technology and the people who built it. Where it is tried, with whom, how large and for how long is the veterinary service's and the partners' decision. What follows is a suggestion.",
+    "pl.k1": "Where",
+    "pl.v1": "wherever it is wanted: a veterinary camp, a dip tank area, a cooperative, a feedlot, an abattoir, in any combination",
+    "pl.k2": "What",
+    "pl.v2": "register, sick report to a vet, dip day, movement at the dip tank, the record that travels to an abattoir; the feedlot's gate-to-hook pair where there is a feedlot",
+    "pl.k3": "How long",
+    "pl.v3": "we suggest one place and one season, with a comparable area alongside",
+    "pl.k4": "Who",
+    "pl.v4": "the veterinary service, a cooperative, a feedlot or an abattoir if they want it, and us",
+    "pl.k5": "Measured by",
+    "pl.v5": "reports answered, and how fast · records complete at sale · herders still using it in month six · cost per animal",
+    "pl.k6": "What a site would need",
+    "pl.v6": "phones, a recorder, training, bundles: indicative, for the partners to price; the people are the real cost",
+    "pl.ask": "What we ask",
+    "pl.a1": "1. The veterinary service of Southern Province in the pilot: its camp officers record, its district officer receives the reports, its finding closes each case.",
+    "pl.a2": "2. An interface to the national identification system, so the pilot's records sit under it from day one, never beside it.",
+    "pl.a3": "3. A name: the officer who owns the pilot on the government side, whom we report to monthly, in Tonga and in English.",
+    "pl.bring": "What we bring",
+    "pl.b1": "The system, running; the training and the procedures, written with the camp; our machine and our line; the Tonga; the monthly report with the numbers, good or bad. Not for profit for as long as it is used to promote smallholder cattle farming in Southern Province, no charge to any farmer; any commercial use is discussed separately.",
+    "pl.p2": "If the season shows that information was not the missing input, we say so, and the records stay with the camp.",
+    "pl.again": "Back to the start",
+    "pl.full": "The full walk",
+    "nar.sP": "The end of the tour: what we have is the technology; where and how it is tried is the partners' decision; what we suggest is one place, one season, measured. The full walk has every screen behind this.",
+    "s0.note": "The concept note (PDF), to print and hand over",
+    "pl.note": "The concept note (PDF): this proposal on ten pages, with the screens and a QR code to the demo",
+    "t.5": "It understands Tonga, by design",
+    "t.5b": "The herder writes Tonga, the line reads it. Not a big model guessing: a harness that holds the behaviour in code, a triage of what the message is (a sick report, a dip day, a sale, a question), and a small model trained here that only reads the Tonga, with a Tonga desk of teachers correcting what it gets wrong. The same design won the agriculture track of the World Bank's Small AI for Development hackathon in October 2026, an SMS cooperative for coffee farmers in Timor-Leste reading Tetum; we had built it months earlier for Yumi Milling's WhatsApp line in Batoka, where it answers staff and customers every day. Adapting it to cattle is about twenty hours of teacher input, not a new model."
+  },
+  "to": {}
+}
+</script>
+
+<script>
+(function(){
+  var S=JSON.parse(document.getElementById("strings").textContent);
+  var lang="en";
+  function t(k){var v=S[lang]&&S[lang][k];return (v&&v.length)?v:S.en[k]||k}
+  function applyLang(){
+    document.querySelectorAll("[data-t]").forEach(function(el){el.textContent=t(el.getAttribute("data-t"))});
+    document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-lang")===lang?"true":"false")});
+    var keys=Object.keys(S.en),n=keys.filter(function(k){return S.to[k]&&S.to[k].length}).length;
+    var p=document.getElementById("pend");
+    if(lang==="to"&&n<keys.length){p.textContent=t("pend").replace("{n}",n).replace("{m}",keys.length);p.className="pend on"}else{p.className="pend"}
+    document.documentElement.lang=lang==="to"?"toi":"en";
+    renderHerd();narrate();
+  }
+  document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){lang=b.getAttribute("data-lang");applyLang()})});
+
+  // herd
+  var herd=[["Nkuku","cow","a2.jpg"],["Chipego","heifer","a5.jpg"],["Mwiinga","steer","a3.jpg"],["Siavwapa","bull","a1.jpg"],["Nchimunya","cow","a4.jpg"],["Chuumbwe","steer","a9.jpg"],["Milimo","heifer","a7.jpg"],["Luumuno","cow","a8.jpg"],["Siakwale","ox","a6.jpg"],["Choolwe","cow","a10.jpg"]];
+  var newCalf=false,sickOne="Chipego",dipped=false,sel=null;
+  function renderHerd(){
+    var g=document.getElementById("herd");g.innerHTML="";
+    var list=herd.slice();if(newCalf)list.push(["Lweendo","calf","k2.jpg"]);
+    list.forEach(function(a){
+      var d=document.createElement("button");d.type="button";d.className="animal"+(sel===a[0]?" sel":"");
+      var dot=a[0]===sickOne?"sick":(a[1]==="calf"?"new":"");
+      d.innerHTML='<span class="dot '+dot+'"></span>'+(a[2]?'<img src="photos/'+a[2]+'" alt="">':'<svg viewBox="0 0 120 70"><use href="#cow"/></svg>')+'<div class="nm">'+a[0]+'</div><div class="cl">'+t("cls."+a[1])+'</div>';
+      d.addEventListener("click",function(){sel=a[0];renderHerd();go("sD")});
+      g.appendChild(d);
+    });
+    var add=document.createElement("button");add.type="button";add.className="animal add";add.innerHTML="<span>+</span>";add.addEventListener("click",function(){go("s2")});g.appendChild(add);
+    document.querySelector('[data-t="s1.count"]').textContent=(list.length)+" "+t("s1.count").replace(/^\d+\s*/,"");
+  }
+
+  var INFO={Nkuku:{id:"0412",born:2020,w:392,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"],["This morning","ev.calved"]]},
+    Chipego:{id:"0416",born:2024,dob:"14 Mar 2024",sire:"Mulonga",w:286,ev:[["Today 06:10","ev.sickrep"],["Fri","ev.dip"],["May 2026","ev.vacc"]]},
+    Mwiinga:{id:"0417",born:2023,dob:"2 Jan 2023",sire:"Mulonga",w:404,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"],["Jun 2026","ev.weighed"]]},
+    Siavwapa:{id:"0401",born:2019,w:522,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"],["Aug 2026","ev.bullcheck"]]},
+    Nchimunya:{id:"0408",born:2021,w:378,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"]]},
+    Chuumbwe:{id:"0421",born:2023,dob:"27 Dec 2023",sire:"Simoonga",w:396,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"]]},
+    Milimo:{id:"0425",born:2024,dob:"9 Feb 2024",sire:"Mulonga",w:274,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"]]},
+    Luumuno:{id:"0409",born:2021,w:371,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"],["Sep 2024","ev.calved"]]},
+    Siakwale:{id:"0403",born:2018,w:455,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"]]},
+    Choolwe:{id:"0411",born:2020,w:385,ev:[["Fri","ev.dip"],["May 2026","ev.vacc"],["Jul 2025","ev.calved"]]},
+    Lweendo:{id:"0431",born:2026,dob:"today",sire:"Simoonga",w:31,ev:[["Today","ev.born"]],mother:"Nkuku"}};
+  function renderDetail(){
+    var list=herd.slice();if(newCalf)list.push(["Lweendo","calf","k2.jpg"]);
+    var a=null;list.forEach(function(x){if(x[0]===sel)a=x});if(!a)a=list[1];
+    var i=INFO[a[0]]||{id:"0400",born:2022,w:300,ev:[]};
+    var ph=document.getElementById("dphoto");if(a[2]){ph.src="photos/"+a[2];ph.style.display="block"}else{ph.style.display="none"}
+    document.getElementById("dname").textContent=a[0];
+    document.getElementById("dclass").textContent=t("cls."+a[1])+" · ID ZM-SP-"+i.id;
+    var st=document.getElementById("dstatus");
+    if(a[0]===sickOne){st.className="tag urgent";st.textContent=t("d.st.sick")}else if(a[1]==="calf"){st.className="tag";st.textContent=t("d.st.new")}else{st.className="tag ok";st.textContent=t("d.st.ok")}
+    var bornTxt=i.dob?(i.dob==="today"?t("d.today"):i.dob)+" · "+t("d.atbirth"):t("d.about")+" "+i.born+" · "+t("d.byteeth");
+    var f=[[t("d.owner"),"Mutinta"],[t("d.born"),bornTxt],[t("d.weight"),i.w+" kg"],[t("d.dipped"),a[1]==="calf"?t("d.notyet"):t("d.thisweek")],[t("d.vacc"),a[1]==="calf"?t("d.notyet"):"May 2026"],[t("d.moves"),t("d.none")]];
+    if(i.sire)f.splice(2,0,[t("d.sire"),i.sire]);if(i.mother)f.splice(2,0,[t("d.mother"),i.mother]);
+    document.getElementById("dfacts").innerHTML=f.map(function(x){return "<li><span>"+x[0]+"</span><span class=\"r\">"+x[1]+"</span></li>"}).join("");
+    document.getElementById("devents").innerHTML=i.ev.map(function(x){return "<li><span>"+t(x[1])+"</span><span class=\"r\">"+x[0]+"</span></li>"}).join("")||"<li><span class=\"muted\">"+t("d.noevents")+"</span></li>";
+  }
+  // tap groups
+  document.querySelectorAll("[data-group]").forEach(function(grp){
+    var multi=grp.getAttribute("data-multi");
+    grp.querySelectorAll(".tap").forEach(function(b){
+      b.addEventListener("click",function(){
+        if(multi){b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true")}
+        else{grp.querySelectorAll(".tap").forEach(function(o){o.setAttribute("aria-pressed",o===b?"true":"false")})}
+        if(grp.getAttribute("data-group")==="signs"){
+          var on=Array.prototype.map.call(grp.querySelectorAll('.tap[aria-pressed="true"]'),function(x){return x.getAttribute("data-sign")});
+          document.getElementById("urgent").style.display=(on.indexOf("cough")>-1&&on.indexOf("noeat")>-1)||on.indexOf("down")>-1?"block":"none";
+        }
+      });
+    });
+  });
+  document.getElementById("photo").addEventListener("click",function(){this.style.borderColor="#1B1711"});
+  document.getElementById("reg").addEventListener("click",function(){newCalf=true;document.getElementById("regdone").style.display="inline";this.disabled=true;renderHerd()});
+  var wv=312;function showW(){document.getElementById("wval").textContent=wv+" kg"}
+  document.getElementById("wup").addEventListener("click",function(){wv+=2;showW()});document.getElementById("wdn").addEventListener("click",function(){wv-=2;showW()});
+  document.getElementById("intake").addEventListener("click",function(){document.getElementById("intakedone").style.display="inline";this.disabled=true});
+  document.getElementById("dipall").addEventListener("click",function(){dipped=true;document.getElementById("dipdone").style.display="block";this.disabled=true;renderHerd()});
+
+  // guided tour
+  var FULL=["s0","sA","sB","s1","sD","s2","s3","sW","s4","s5","s6","s7","s8","sC","sG","s9","sE","sH","sT","s10","sQ","s11","s12","s13","s14","s15","sV","sP"];
+  var SHORT=["s0","sV","s1","s3","s4","s5","s7","s8","s13","sE","sQ","sP"];
+  var ORDER=SHORT,step=0,N=ORDER.length;
+  function setTour(full){ORDER=full?FULL:SHORT;N=ORDER.length;document.body.setAttribute("data-tour",full?"full":"short")}
+  function go(n){
+    if(typeof n==="string"){var id=n;n=ORDER.indexOf(id);if(n<0&&FULL.indexOf(id)>=0){setTour(true);n=ORDER.indexOf(id)}if(n<0)n=0}
+    step=Math.max(0,Math.min(N-1,n));
+    document.querySelectorAll(".screen").forEach(function(s){var on=s.id===ORDER[step];s.classList.toggle("on",on);if(on)s.scrollTop=0});
+    if(ORDER[step]==="sD")renderDetail();
+    narrate();
+  }
+  var HDR={s1:"hdr.owner",sD:"hdr.owner",s2:"hdr.owner",s7:"hdr.owner",s8:"hdr.owner",sC:"hdr.owner",sG:"hdr.owner",s3:"hdr.herder",sW:"hdr.wa",s6:"hdr.herder",s4:"hdr.vet",s5:"hdr.vet",s9:"hdr.ministry",sE:"hdr.ministry",s11:"hdr.feedlot",s12:"hdr.feedlot",s13:"hdr.abattoir"};
+  var HDR2={"hdr.owner":"hdr.owner2","hdr.herder":"hdr.herder2","hdr.wa":"hdr.wa2","hdr.vet":"hdr.vet2","hdr.ministry":"hdr.ministry2","hdr.feedlot":"hdr.feedlot2","hdr.abattoir":"hdr.abattoir2"};
+  function narrate(){
+    var hk=HDR[ORDER[step]]||"app.name";document.getElementById("hdr").textContent=t(hk);document.getElementById("hdr2").textContent=t(HDR2[hk]||"app.place");
+    var st=document.getElementById("steps");st.innerHTML="";
+    for(var i=0;i<N;i++){var d=document.createElement("i");d.className=i<step?"done":(i===step?"cur":"");st.appendChild(d)}
+    document.getElementById("nartext").textContent=t("nar."+ORDER[step]);
+    document.getElementById("navrow").style.display=step===0?"none":"";
+    document.getElementById("back").disabled=step===0;
+    document.getElementById("next").disabled=step===N-1;
+  }
+  document.getElementById("next").addEventListener("click",function(){go(step+1)});
+  (function(){var base=location.pathname.replace(/[^\/]*$/,"");document.querySelectorAll('a[href^="spec-sheet"]').forEach(function(a){a.setAttribute("href",base+a.getAttribute("href"))})})();
+  document.querySelectorAll('[data-sign="dead"]').forEach(function(b){b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")==="true";document.getElementById("deadrule").style.display=on?"":"none"})});
+  document.querySelectorAll("#fullwalk,#fullwalk0").forEach(function(b){b.addEventListener("click",function(){setTour(true);go("sA")})});
+  document.getElementById("shorttour").addEventListener("click",function(){setTour(false);go(1)});
+  var deferredInstall=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredInstall=e;document.getElementById("installbtn").style.display=""});
+  document.getElementById("installbtn").addEventListener("click",function(){if(!deferredInstall)return;deferredInstall.prompt();deferredInstall.userChoice.then(function(){deferredInstall=null;document.getElementById("installbtn").style.display="none"})});
+  window.addEventListener("appinstalled",function(){document.getElementById("installbtn").style.display="none"});
+  document.getElementById("rep0417").addEventListener("click",function(){var c=document.getElementById("rep0417card");c.style.display=c.style.display==="none"?"":"none"});
+  document.getElementById("back").addEventListener("click",function(){go(step-1)});
+  document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){var v=b.getAttribute("data-go");go(/^\d+$/.test(v)?+v:v)})});
+  // free mode: tapping the herd grid's animals navigates in free mode too; keep simple
+  var q=/[?&]step=([A-Za-z0-9]+)/.exec(location.search);if(/[?&]tour=full/.test(location.search))setTour(true);applyLang();go(q?(/^\d+$/.test(q[1])?+q[1]:q[1]):0);
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){})}
+})();
+</script>
+</body>
+</html>

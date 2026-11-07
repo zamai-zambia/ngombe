@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask about Ng'ombe</title>
+<meta name="description" content="Ask ZamAi's AI agent about Ng'ombe, the cattle records proposal for Southern Province: the concept note, the spec sheet and the beef market research.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1711">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+  :root { color-scheme:light; --paper:#F8F4EA; --surface:#FFFDF8; --ink:#1B1711; --ink-2:#4E463A; --muted:#8A8070; --rule:#D5C9AE; --green:#145C4B; --ochre:#B06E2E; --ochre-soft:#F3E6D3;
+    --sans:"IBM Plex Sans",-apple-system,"Segoe UI",system-ui,sans-serif; }
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-400.woff2) format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"IBM Plex Sans";src:url(/src/fonts/IBMPlexSans-500.woff2) format("woff2");font-weight:500;font-display:swap}
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body { margin:0; padding:20px 16px 48px; background:var(--paper); color:var(--ink); font:15px/1.55 var(--sans); }
+  main { max-width:720px; margin:0 auto; }
+  .top a { color:var(--muted); text-decoration:none; font-size:13px; }
+  h1 { margin:10px 0 4px; font:500 28px/1.2 var(--sans); letter-spacing:-.02em; }
+  h2 { margin:0 0 8px; font:500 15px/1.3 var(--sans); }
+  p { margin:0 0 10px; }
+  a { color:var(--green); text-underline-offset:3px; }
+  .lead { color:var(--ink-2); margin-bottom:14px; }
+  .note { border-left:3px solid var(--ochre); background:var(--ochre-soft); padding:10px 12px; border-radius:0 8px 8px 0; font-size:13.5px; color:var(--ink-2); margin-bottom:18px; }
+  .note p:last-child { margin:0; }
+  button, textarea, input { font:inherit; color:var(--ink); }
+  button { min-height:44px; padding:0 18px; border:1px solid var(--rule); border-radius:8px; background:transparent; color:var(--ink-2); cursor:pointer; }
+  button.primary { background:var(--green); border-color:var(--green); color:#fff; font-weight:500; }
+  button:disabled { opacity:.45; cursor:default; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, a:focus-visible { outline:2px solid var(--green); outline-offset:3px; }
+  textarea, input { width:100%; border:1px solid var(--rule); border-radius:8px; background:var(--surface); padding:10px 12px; }
+  textarea { min-height:84px; resize:vertical; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; }
+  .chips button { min-height:36px; padding:4px 12px; border-radius:18px; font-size:13.5px; text-align:left; }
+  #log { display:flex; flex-direction:column; gap:12px; margin-bottom:14px; }
+  .msg { padding:12px 14px; border-radius:10px; border:1px solid var(--rule); background:var(--surface); white-space:normal; overflow-wrap:anywhere; }
+  .msg.you { background:transparent; border-style:dashed; color:var(--ink-2); }
+  .msg .who { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .msg ul { margin:4px 0 8px; padding-left:20px; }
+  .msg p { margin:0 0 8px; } .msg p:last-child { margin:0; }
+  .row { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:8px; flex-wrap:wrap; }
+  .hint { color:var(--muted); font-size:12.5px; }
+  .card { margin-top:28px; padding:16px; border:1px solid var(--rule); border-radius:12px; background:var(--surface); }
+  .card input { margin-top:8px; }
+  .status { font-size:13px; color:var(--muted); min-height:1.4em; }
+  footer { margin-top:28px; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a href="./">Ng'ombe, the demo</a> · <a href="spec-sheet.html">the spec sheet</a> · <a href="concept-note.pdf">the concept note (PDF)</a></div>
+  <h1>Ask about Ng'ombe</h1>
+  <p class="lead">Questions about the cattle records proposal for Southern Province: what the demo shows, what would be
+  needed, the economics, the markets and grading, the law, the data. The answers come from the concept note, the spec
+  sheet and our beef market research.</p>
+
+  <div class="note" role="note">
+    <p><strong>You are talking to an AI</strong> (Claude, by Anthropic), ZamAi's agent, not to a person. It answers from
+    the three documents and names the one it relies on; it can still be wrong, so check the document. It makes no
+    commitments for anyone and does not decide where or how anything is tried: that is the partners' decision.</p>
+    <p>Questions and answers are kept so we can improve the documents. Please do not type names or phone numbers.</p>
+  </div>
+
+  <div class="chips" id="chips" aria-label="Example questions">
+    <button type="button">What does the record add to the price of an animal?</button>
+    <button type="button">Which export markets could Zambian beef reach, and what do they require?</button>
+    <button type="button">How does a sick report reach a vet, and who decides?</button>
+    <button type="button">Who owns the data, and what does the Data Protection Act require?</button>
+    <button type="button">What exists today and what still has to be built?</button>
+  </div>
+
+  <div id="log" aria-live="polite"></div>
+
+  <form id="ask">
+    <label for="q" class="hint">Your question</label>
+    <textarea id="q" maxlength="1500" placeholder="Ask about the proposal, the economics, the markets or the technology" required></textarea>
+    <div class="row">
+      <span class="hint" id="state"></span>
+      <button type="submit" class="primary" id="go">Ask</button>
+    </div>
+  </form>
+
+  <section class="card" aria-labelledby="s-h">
+    <h2 id="s-h">Send to Chris</h2>
+    <p class="hint">A suggestion, a correction, a criticism or an offer to work together. It goes to Christoph Lindinger,
+    who reads every one. Add a way to reach you only if you want an answer.</p>
+    <textarea id="s-text" maxlength="3000" aria-label="Your message to Chris"></textarea>
+    <input id="s-contact" maxlength="200" placeholder="E-mail or other contact (optional)" aria-label="Your contact, optional">
+    <div class="row"><span class="status" id="s-status" role="status"></span><button type="button" id="s-go">Send</button></div>
+  </section>
+
+  <footer>
+    <p>Zamai Solutions, the applied-AI work of Yumi Milling Ltd, Batoka. Not for profit for as long as it is used to
+    promote smallholder cattle farming in Southern Province. People: <a href="mailto:chris@zamai.pro">chris@zamai.pro</a>,
+    +260 96 2653100. AI agents: agent@zamai.pro.</p>
+  </footer>
+</main>
+<script>
+(function () {
+  var API = 'ask/api';
+  var sid = '';
+  try { sid = localStorage.getItem('ngombe-ask-sid') || ''; if (!sid) { sid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('ngombe-ask-sid', sid); } }
+  catch (e) { sid = Math.random().toString(36).slice(2); }
+  var history = [];
+  var log = document.getElementById('log'), q = document.getElementById('q'), go = document.getElementById('go'), state = document.getElementById('state');
+
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function render(text) {
+    var out = [], list = null;
+    text.split(/\n/).forEach(function (line) {
+      var l = esc(line).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/(^|\W)\*(\S.*?\S|\S)\*(?=\W|$)/g, '$1<em>$2</em>');
+      var m = /^\s*(?:[-*•]|\d+[.)])\s+(.*)$/.exec(l);
+      if (m) { if (!list) { list = []; } list.push('<li>' + m[1] + '</li>'); return; }
+      if (list) { out.push('<ul>' + list.join('') + '</ul>'); list = null; }
+      if (l.trim()) out.push('<p>' + l + '</p>');
+    });
+    if (list) out.push('<ul>' + list.join('') + '</ul>');
+    return out.join('');
+  }
+  function bubble(who, cls) {
+    var d = document.createElement('div'); d.className = 'msg ' + cls;
+    d.innerHTML = '<span class="who">' + who + '</span><div class="body"></div>';
+    log.appendChild(d); return d.querySelector('.body');
+  }
+
+  async function ask(text) {
+    text = text.trim(); if (!text) return;
+    bubble('You', 'you').innerHTML = render(text);
+    var b = bubble("ZamAi's agent (AI)", 'ai'); b.innerHTML = '<p class="hint">Reading the documents…</p>';
+    go.disabled = true; state.textContent = 'Answering, this can take a little while.';
+    var answer = '';
+    try {
+      var r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'ask', q: text, history: history, sid: sid }) });
+      if (!r.ok) {
+        var j = {}; try { j = await r.json(); } catch (e) {}
+        answer = j.message || 'Something went wrong. Please try again in a minute.';
+        b.innerHTML = render(answer);
+      } else {
+        var rd = r.body.getReader(), dec = new TextDecoder();
+        for (;;) { var x = await rd.read(); if (x.done) break; answer += dec.decode(x.value, { stream: true }); b.innerHTML = render(answer); }
+        history.push({ role: 'user', content: text }, { role: 'assistant', content: answer });
+        history = history.slice(-12);
+      }
+    } catch (e) {
+      b.innerHTML = render('The connection dropped. Please try again.');
+    }
+    go.disabled = false; state.textContent = '';
+  }
+
+  document.getElementById('ask').addEventListener('submit', function (e) { e.preventDefault(); var t = q.value; q.value = ''; ask(t); });
+  q.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); document.getElementById('ask').requestSubmit(); } });
+  document.getElementById('chips').addEventListener('click', function (e) { if (e.target.tagName === 'BUTTON' && !go.disabled) ask(e.target.textContent); });
+
+  var st = document.getElementById('s-status');
+  document.getElementById('s-go').addEventListener('click', async function () {
+    var t = document.getElementById('s-text').value.trim(); if (t.length < 5) { st.textContent = 'Please write a little more.'; return; }
+    this.disabled = true; st.textContent = 'Sending…';
+    try {
+      var r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'suggest', text: t, contact: document.getElementById('s-contact').value, sid: sid }) });
+      st.textContent = r.ok ? 'Sent. Thank you.' : 'That did not go through. Please write to chris@zamai.pro.';
+      if (r.ok) { document.getElementById('s-text').value = ''; document.getElementById('s-contact').value = ''; }
+    } catch (e) { st.textContent = 'That did not go through. Please write to chris@zamai.pro.'; }
+    this.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>
