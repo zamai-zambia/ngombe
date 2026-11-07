@@ -1479,7 +1479,20 @@
       "s3.seechat": "Langa mubandi",
       "w.title": "Bulunguluzi mbubonya, a WhatsApp",
       "w.sys0": "Namba eeyi ilembeledwe Mweemba, mweembezi, Butanga bwamutinta. Pemba. Ubelesya Zina lyakwe, taakwe passworpe.",
-      "w.h1": "Chipego ulakola, talyi kuzwa jilo"
+      "w.h1": "Chipego ulakola, talyi kuzwa jilo",
+      "w.z1": "Ndanvwa, Mweemba. Ndabala ceeci mbuli bulunguluzi bwa kuciswa, Ng'ombe: Chipego, Moombe, Myaaka yobile, Butanga bwa Mutinta, Pemba. Zitondezyo: Kukola, kutalya kuzwa mulibwane. Sena eeci cilikabotu? Ingula 1 kuzumina, 2 kutikoyanda kucinca cintu.",
+      "w.z2": "Mubuzyo uumbi: Sena kuli iimbi ng'ombe muciba iikola na kutalya",
+      "w.h3": "Peepe alike biyo. Wakali ku dibbi lyakwa Siamundele muli bwabili",
+      "w.sys1": "Buluguluzi 0417: 06:06: Yakabonwa a Mweemba: Chipego:Kudibbya kwamamanino Kwa Siamundele, bwabili 3 Nov: Yatumwa kuli Dr. Moonga.",
+      "w.escwho": "Kuli ba District veterinary officer, Pemba: 06:06: Yatumwa aciindi nciconya",
+      "w.z4": "Alimwi: ziba zimbi zyobile zilimumbali zyakaamba mbubonya ino nsondo. Basilisi ba ng'ombe ba kaambilwa. Na waindilila kuciswa, nanka imbi ng'ombe imbi yatondezya kuciswa, koituma aawa cakufwaambana.",
+      "w.rule": "Mulawo wakusumpya twaambo uli aantangalala: bulunguluzi botatwe bujisi zitondezyo zikozyana, ng'ombe zisiyene, kuzwa kubutanga bubelesya dibi lyomwe mumazuba ali musanu aabili. Cikede atala aamulawo, Bulwazi buyeeyelwa bwalibonya bulazibisigwa aba Vet cakufwambaana kweendelani amulawo wanseba zyabanyama. System ilabala, ilabuzya lomwe, ilabweza twaambo akutuma. Taisiliki pe.",
+      "w.tonga": "Mubandi uleenda mbubona muciitonga: Cikuwa cinoolibonya aawa mane mizila yacitonga yanjila.",
+      "hdr.wa": "WhatsApp: Laini ya Zamai",
+      "hdr.wa2": "Fooni Ya Mweemba",
+      "s3.dead": "Yajamwa kiifwide",
+      "s3.deadrule": "Mutajuli nokuba kweenzya mutunta. Bantu ababwa kabatantamuka. Kotol twaambo eno.",
+      "s3.deadrule2": "Yafwa calino kaijisi abulowa mumpemo na mumolomo inga kaili Anthrax"
   }
 }
 </script>
@@ -1578,7 +1591,9 @@
   }
   var HDR={s1:"hdr.owner",sD:"hdr.owner",s2:"hdr.owner",s7:"hdr.owner",s8:"hdr.owner",sC:"hdr.owner",sG:"hdr.owner",s3:"hdr.herder",sW:"hdr.wa",s6:"hdr.herder",s4:"hdr.vet",s5:"hdr.vet",s9:"hdr.ministry",sE:"hdr.ministry",s11:"hdr.feedlot",s12:"hdr.feedlot",s13:"hdr.abattoir"};
   var HDR2={"hdr.owner":"hdr.owner2","hdr.herder":"hdr.herder2","hdr.wa":"hdr.wa2","hdr.vet":"hdr.vet2","hdr.ministry":"hdr.ministry2","hdr.feedlot":"hdr.feedlot2","hdr.abattoir":"hdr.abattoir2"};
+  function hasTonga(){var sc=document.getElementById(ORDER[step]);if(!sc)return false;var ks=[].slice.call(sc.querySelectorAll("[data-t]")).map(function(e){return e.getAttribute("data-t")});ks.push(HDR[ORDER[step]]||"");return ks.some(function(x){return S.to[x]&&S.to[x].length})}
   function narrate(){
+    document.querySelector(".lang").style.visibility=hasTonga()?"visible":"hidden";
     var hk=HDR[ORDER[step]]||"app.name";document.getElementById("hdr").textContent=t(hk);document.getElementById("hdr2").textContent=t(HDR2[hk]||"app.place");
     var st=document.getElementById("steps");st.innerHTML="";
     for(var i=0;i<N;i++){var d=document.createElement("i");d.className=i<step?"done":(i===step?"cur":"");st.appendChild(d)}
