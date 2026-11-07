@@ -2,11 +2,13 @@
 
 ## A records pilot for the Southern Province cattle sector: the mandate and the funding requested
 
-DRAFT, version 0.83, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
+DRAFT, version 0.84, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
 
 [QR]
 
 ## 1. The decision brief
+
+**Ng'ombe, and the Tonga.** Among the Tonga of the Southern Province cattle have never been only livestock. They are the household's bank and its standing: bridewealth is paid in them, a funeral is marked with them, a dispute is settled with them, and a man or a woman is measured by the kraal, the ciba, that stands by the house. The plough oxen that made the Plateau Tonga the country's leading smallholder maize growers a century ago were cattle, and the herd that a family loans out to kin across the villages is a web of obligations that an outsider cannot see. The language carries this: Tonga has its own words for the colours, the markings and the horns of an animal, for its age and its standing in the herd, for the acts of herding, dipping, loaning and selling; these are words that children learn at the kraal and that have no equal in English. The province holds more cattle than any other in Zambia, about 1.75 million head in the 2024 survey. A records service for these herds is therefore not only a business tool. Built in Tonga, by Tonga speakers, it keeps the words of the kraal in the technology that a young herder carries in his pocket, where otherwise the English of the phone would replace them. That is why the line reads Tonga, why every fixed line a herder sees comes from a speaker, and why the people translating and reviewing this work are named on its cover. The introduction you are reading is to be read first in Tonga, in Matthew Sakala's rendering with Dr Khama Hang'ombe's review; the English stands here until it is in.
 
 **The proposal.** A one-season test of a cattle records service under the veterinary service, wherever it chooses to try it; what we have and what we suggest is on page 3. One record per animal, written by the people who know the animal: the herder, the owner, the veterinary assistant at the camp, the abattoir. A sick report reaches the veterinary assistant and the district veterinary officer with the photo and the animal's history, in Tonga or English; the carcass result comes back to the farmer. Nothing more in the first season: no cameras, no breeding programme, no models.
 
@@ -19,6 +21,8 @@ DRAFT, version 0.83, 7 November 2026, not yet ready for submission · to be subm
 **What works today** is in section 6, under what is built and running; what remains to be agreed is in this brief.
 
 **The test, and the exit.** We would suggest that a test continues past its first season only if sick reports are answered within an agreed time, if records are complete at the point of sale, and if herders are still using it in month six without being chased. If the season shows that information was not the missing input, we say so, and the records stay with the camp in a form it can use.
+
+[PAGE]
 
 ## 2. What the pilot does, screen by screen
 
