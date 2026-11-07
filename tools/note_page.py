@@ -87,7 +87,7 @@ a{color:var(--green);text-decoration:none}
 .qr img{width:70px;height:70px}
 .shots{display:flex;gap:14px;align-items:flex-start;margin:8pt 0 12pt;page-break-inside:avoid}
 figure{margin:0;flex:1}
-figure img{width:100%;max-height:135mm;object-fit:contain;object-position:top;border:1px solid var(--hair);border-radius:10px;display:block}
+figure img{width:100%;max-height:128mm;object-fit:contain;object-position:top;border:1px solid var(--hair);border-radius:10px;display:block}
 .np{page-break-before:always}
 h2.np{border-top:0;padding-top:0;margin-top:0}
 .shots figure{max-width:47%}
