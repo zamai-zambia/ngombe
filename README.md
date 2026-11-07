@@ -37,5 +37,7 @@ PolyForm Noncommercial 1.0.0 (`LICENSE.md`): use, copy, change and share it for 
 not for profit for as long as it is used to promote smallholder cattle farming in Southern Province: no subscriptions,
 no charge to any farmer. Commercial use is discussed separately with Zamai Solutions (chris@zamai.pro).
 
+How the small, local models behind this are made is described in the series Local AI for Zambia, paper 1: *A Chitonga-English Teacher Assistant for the Southern Province* (Zenodo, https://doi.org/10.5281/zenodo.23642662 ).
+
 Built with Claude Code (Anthropic), Claude Fable 5.1, directed by Christoph Lindinger. Tonga by Matthew Sakala and the
 speakers on the Zamai line.
