@@ -2,7 +2,7 @@
 
 ## A records pilot for the Southern Province cattle sector: the mandate and the funding requested
 
-DRAFT, version 0.6, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
+DRAFT, version 0.8, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
 
 [QR]
 
@@ -14,7 +14,7 @@ DRAFT, version 0.6, 7 November 2026, not yet ready for submission · to be submi
 
 **What we commit to.** The development work: the records system adapted to cattle, the herder's and the camp's screens, the WhatsApp line reading Tonga, the training material written with the camp, hosting on our own machine, and a monthly report with the numbers, good or bad. That is ours and it is contributed. Where it is tried, with whom, how large and for how long is not ours to decide or to commit: page 3 says what we have and what we suggest, and the partners decide. No farmer pays, in the pilot or after. This work is not for profit for as long as it is used to promote smallholder cattle farming in Southern Province; any commercial use, by a processor for instance, is discussed separately.
 
-**What it costs, and what we seek.** The software is not the cost; we carry it. The cost is people in the field, the production of data and the machine the records live on. Two phases over two years, 95,000 to 170,000 US dollars indicative, from the partners or from a funder the partners help us approach, with our own contribution in kind; the tables are in section 3.
+**What it costs, and what we seek.** The software is not the cost; we carry it. The cost is people in the field, the production of data and the machine the records live on. Two phases over two years, about 175,000 US dollars indicative, from the partners or from a funder the partners help us approach, with our own contribution in kind; the tables are in section 3. Once it works, running it costs about 5,200 US dollars a year at pilot scale, people in the field aside: a record costs nothing to keep.
 
 **What works today** is in section 6: the demo, the records service and the line are running; what remains to be built is listed there, what remains to be agreed is in this brief.
 
@@ -42,47 +42,40 @@ What we have is the technology, and the people who built it. Where it is tried, 
 
 **What we suggest.** One place and one season, the records service only, with a comparable area alongside where nothing changes. Measured with denominators: sick reports received, acknowledged within an agreed time, and closed with a recorded outcome; the share of enrolled animals with dipping, vaccination and movement entries complete at the point of sale; deaths and calvings recorded per hundred enrolled animals, read first as better counting; the share of enrolled herders still making entries in month six without prompting; the cash cost per enrolled animal. Suggested gates: if by month three fewer than half the enrolled herders have made an entry, or reports go unacknowledged, stop and say why. One place and one comparison area can show whether the service is used and whether reports are answered; they cannot show that it changed mortality, and we would not claim it.
 
-**What a test site would need, indicative, to be priced by the partners**
-
-| Item | US$ |
-|---|---|
-| Phones for a recorder and the camp (rugged, good camera), chargers, power bank | 1,000 to 1,500 |
-| A field recorder and trainer, part time, one season, Zambian rate | 4,000 to 6,000 |
-| Training days for the recorder, the veterinary assistant and herders; transport | 1,500 to 2,500 |
-| Data bundles, printing, tags where the national unit requires them | 1,000 to 2,000 |
-| A second recorder on a sample, checks against the scale and the vet's book | 1,000 to 1,500 |
-| Indicative total, cash | about 8,500 to 13,500 |
-
 Contributed by Zamai, and committed: the development work, its hosting on our own machine, the monthly report, the adaptation of the responder to cattle, and our time. Whatever funding arrives pays the contributors' ledger first: the Tonga and field work done unpaid to get here. The Tonga is contributed from the partners' side: Matthew Sakala is already on it. The staff time of the veterinary service and the cash costs are the partners' to decide and carry.
 
-**What it costs, and what we seek.** The software is not the cost: it exists, and we carry its development and hosting ourselves. The cost is the people in the field, the production of data, and the machine the records live on, none of which can be copied and all of which have to be paid for. Two phases, indicative, in US dollars, assumptions in section 3: a first season at one or two sites, about 27,000 to 49,000; then the three models and readiness for a province over the following fifteen months, about 66,000 to 123,000. Over two years, 95,000 to 170,000. We seek this from the partners, or from a funder the partners help us approach, and we bring our own contribution in kind: the development, the hosting, a year of records practice behind it, and the time of the people who built it. The people who have worked unpaid to get this far, the translator and the field contributors, are paid first from whatever arrives.
+**What it costs, and what we seek.** The software is not the cost: it exists, and we carry its development and hosting ourselves. The cost is the people in the field, the production of data, and the machine the records live on, none of which can be copied and all of which have to be paid for. Two phases, indicative, in US dollars, each line costed at the upper end of what we expect and 15 percent contingency on top: a first season at one or two sites, 50,600; then the three models and readiness for a province over the following fifteen months, 124,200. Over two years, 174,800, about 175,000. We seek this from the partners, or from a funder the partners help us approach, and we bring our own contribution in kind: the development, the hosting, a year of records practice behind it, and the time of the people who built it. The people who have worked unpaid to get this far, the translator and the field contributors, are paid first from whatever arrives.
 
 **What the whole of it needs, two phases, indicative, to be priced**
 
 | Phase 1, one season, one or two sites, about nine months | US$ |
 |---|---|
-| A field and data lead, part to full time | 5,000 to 8,000 |
-| Two field recorders for dip days and scoring support | 4,500 to 7,500 |
-| The Tonga desk: the app, the line's replies, checking | 1,500 to 3,000 |
-| 2,000 to 3,000 scored pictures: 25 to 40 dip days with a scorer and a recorder, transport | 3,000 to 6,000 |
-| Phones, chargers, power banks; a server, its power backup and connectivity for the year | 4,000 to 6,500 |
-| Model training runs and the line's model calls | 800 to 2,000 |
-| Training days, meetings, transport; data-protection registration and agreements; measurement and the report | 5,500 to 11,000 |
-| Contingency | 3,000 to 5,000 |
-| Phase 1, indicative total | about 27,000 to 49,000 |
+| A field and data lead, part to full time | 8,000 |
+| Two field recorders for dip days and scoring support | 7,500 |
+| The Tonga desk: the app, the line's replies, checking | 3,000 |
+| 2,000 to 3,000 scored pictures: 25 to 40 dip days with a scorer and a recorder, transport | 6,000 |
+| Phones, chargers, power banks; a server, its power backup and connectivity for the year | 6,500 |
+| Model training runs and the line's model calls | 2,000 |
+| Training days, meetings, transport; data-protection registration and agreements; measurement and the report | 11,000 |
+| Subtotal | 44,000 |
+| Contingency, 15 percent | 6,600 |
+| Phase 1, indicative total | 50,600 |
 
 | Phase 2, the three models and readiness for a province, months ten to twenty-four | US$ |
 |---|---|
-| The same team for fifteen more months, plus one junior Zambian developer | 30,000 to 50,000 |
-| Pictures to 5,000 and more, three areas, two seasons | 6,000 to 12,000 |
-| Tonga speech: thirty to fifty hours transcribed, one voice recorded | 5,000 to 10,000 |
-| Training runs for the text, visual and audio models | 3,000 to 6,000 |
-| Five to ten more sites: phones, one or two camera sites at tanks | 8,000 to 20,000 |
-| Travel, training and meetings across the province | 6,000 to 10,000 |
-| Contingency | 8,000 to 15,000 |
-| Phase 2, indicative total | about 66,000 to 123,000 |
+| The same team for fifteen more months, plus one junior Zambian developer | 50,000 |
+| Pictures to 5,000 and more, three areas, two seasons | 12,000 |
+| Tonga speech: thirty to fifty hours transcribed, one voice recorded | 10,000 |
+| Training runs for the text, visual and audio models | 6,000 |
+| Five to ten more sites: phones, one or two camera sites at tanks | 20,000 |
+| Travel, training and meetings across the province | 10,000 |
+| Subtotal | 108,000 |
+| Contingency, 15 percent | 16,200 |
+| Phase 2, indicative total | 124,200 |
 
-Rates assumed: field staff at K6,000 to 20,000 a month by role, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
+**What it costs to run, once it works.** The build is the cost; the running of it is not. At pilot scale the service needs the machine's power backup and satellite connectivity, the machine itself written off over three years, the line's model calls at under one US cent a message, one refresh of the models a year, and hosting and domains: about 4,500 US dollars a year, 5,200 with 15 percent contingency. People in the field are a cost only while data is being produced; the Tonga desk only when new words are needed. A record, once the system exists, costs nothing to keep: at ten thousand animals the running cost is about fifty US cents an animal a year, at a hundred thousand a few cents.
+
+Each line is the upper end of what we expect, so that the total holds. Rates assumed: field staff at K6,000 to 20,000 a month by role, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
 
 ## 4. The economics, an illustration
 
@@ -126,7 +119,7 @@ On a 220 kilogram carcass at the 2025 DRC price, about US$836, that is roughly U
 
 ## 6. Readiness, data, law
 
-**What works today.** The demo at ngombe.zamai.pro, installable on an Android phone, in English with the herder's lines in Tonga to follow. The records service itself, live at ngombe.zamai.pro/my: an owner or herder opens a profile, accepts the terms, ties their phone number through the WhatsApp line, registers animals with pictures and makes entries; entries are hash-stamped and the owner can export them. The WhatsApp line answers within seconds, without a model: it ties the number, files a photo or a report on a named animal, records dip day for the herd, deaths, sales and calves, and reads a sick report in English, Tonga or a mix of both, the Tonga through our translator, with the original and the reading kept side by side in the record. The same line runs daily for Yumi Milling in Batoka. A Tonga translator and a desk of Tonga teachers who check what the model writes. A records system with row-level access and hash-stamped entries in daily use. What remains to be built is listed in section 6; what remains to be agreed is in this brief.
+**What works today.** The demo at ngombe.zamai.pro, installable on an Android phone, in English with the herder's lines in Tonga to follow. The records service itself, live at ngombe.zamai.pro/my: an owner or herder opens a profile, accepts the terms, ties their phone number through the WhatsApp line, registers animals with pictures and makes entries; entries are hash-stamped and the owner can export them. The WhatsApp line answers within seconds, without a model: it ties the number, files a photo or a report on a named animal, records dip day for the herd, deaths, sales and calves, and reads a sick report in English, Tonga or a mix of both, the Tonga through our translator, with the original and the reading kept side by side in the record. What remains to be built is listed in section 6; what remains to be agreed is in this brief.
 
 **Built, running, to be built.** Running since 7 November 2026: the records service on our own machine, with row-level access, hash-stamped entries, terms accepted before the first record, the phone tied through the WhatsApp line, animals with pictures, the owner's export; the line filing codes, photos, reports on a named animal, dip day, deaths, sales, calves and sick reports within seconds, English, Tonga or mixed, the Tonga read through our translator and kept with the original; the Tonga translator and desk; the demo. To be built: the camp's screens and the veterinary reply; movement entries; the abattoir entry; the line's replies in Tonga (from a speaker, about twenty hours of teacher input, Matthew Sakala is on it); a vet in the loop on the line. To be agreed: the triage rules, the response protocol, the minimum record, the identification arrangement. Research, not in the pilot: weight from a picture, the muzzle as identity, breeding evaluation.
 
@@ -142,7 +135,7 @@ On a 220 kilogram carcass at the 2025 DRC price, about US$836, that is roughly U
 
 ## 7. Who we are, and the references
 
-Zamai Solutions is the applied-AI work of Yumi Milling Ltd, a maize mill in Batoka, Choma district, in Southern Province since 2019; Christoph Lindinger, its director, leads it. We build records systems, made the Tonga translator that teachers in the province test, and run the WhatsApp line that files records daily. Matthew Sakala, Choma, +260 97 7668795, is a partner in this proposal: he contributes the Tonga and brings it to the people who decide. Dr Enock Siankwilimba, +260 96 9832511, is a co-submitter: a PhD in business and management from the University of Zambia on smallholder cattle business models, twenty years in agricultural extension and market-systems development, now an independent adviser; his place in this proposal is being agreed with him before submission. The cattle work is not for profit for as long as it is used to promote smallholder cattle farming in Southern Province: no subscriptions, no charge to any farmer. Any commercial use, by a processor for instance, is discussed separately. Contact: Christoph Lindinger, Director, Yumi Milling Ltd, Batoka · +260 96 2653100 · chris@zamai.pro · WhatsApp on the Zamai line, +260 776 621 255 · the demo: ngombe.zamai.pro.
+Zamai Solutions is the applied-AI work of Yumi Milling Ltd, a maize mill in Batoka, Choma district, in Southern Province since 2019; Christoph Lindinger, its director, leads it. We build records systems, made the Tonga translator that teachers in the province test, and run the WhatsApp line that files records daily. Matthew Sakala, Choma, +260 97 7668795, is a partner in this proposal: he contributes the Tonga and brings it to the people who decide. Dr Enock Siankwilimba, +260 96 9832511, is a co-submitter: a PhD in business and management from the University of Zambia on smallholder cattle business models, twenty years in agricultural extension, now an independent adviser; his place in this proposal is being agreed with him before submission. The cattle work is not for profit for as long as it is used to promote smallholder cattle farming in Southern Province: no subscriptions, no charge to any farmer. Any commercial use, by a processor for instance, is discussed separately. Contact: Christoph Lindinger, Director, Yumi Milling Ltd, Batoka · +260 96 2653100 · chris@zamai.pro · WhatsApp on the Zamai line, +260 776 621 255 · the demo: ngombe.zamai.pro.
 
 **What is shown, and what stays with us.** The app, the demo, the database design and these documents are open to the appraisal and public. The methods by which the line reads, decides and files were built over a year on a working business system in Batoka and are ours; the partners get them through the service. We say this plainly because an idea on paper is easy to copy and the work behind it is not.
 
