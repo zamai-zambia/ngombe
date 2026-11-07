@@ -1,5 +1,7 @@
 # Ng'ombe: a recorded herd
 
+Required Notice: Copyright 2026 Zamai Solutions, Yumi Milling Ltd, Batoka, Zambia (https://zamai.pro). Licensed under PolyForm Noncommercial 1.0.0; commercial use by agreement (chris@zamai.pro).
+
 Cattle records for smallholders in Southern Province, Zambia: one record per animal, written by the people who know the
 animal, over WhatsApp or a small web app, held on a machine in Zambia. Built by Zamai Solutions (Yumi Milling Ltd, Batoka)
 with Anthropic's Claude Code. Demo and concept note: https://ngombe.zamai.pro
