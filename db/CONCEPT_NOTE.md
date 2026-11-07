@@ -2,7 +2,7 @@
 
 ## A records pilot for the Southern Province cattle sector: the mandate and the funding requested
 
-DRAFT, version 0.82, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
+DRAFT, version 0.83, 7 November 2026, not yet ready for submission · to be submitted by Zamai Solutions, Batoka, Choma district, with Matthew Sakala and Dr Enock Siankwilimba
 
 [QR]
 
@@ -14,9 +14,9 @@ DRAFT, version 0.82, 7 November 2026, not yet ready for submission · to be subm
 
 **What we commit to.** The development work: the records system adapted to cattle, the herder's and the camp's screens, the WhatsApp line reading Tonga, the training material written with the camp, hosting on our own machine, and a monthly report with the numbers, good or bad. That is ours and it is contributed. Where it is tried, with whom, how large and for how long is not ours to decide or to commit: page 3 says what we have and what we suggest, and the partners decide. No farmer pays, in the pilot or after. This work is not for profit for as long as it is used to promote smallholder cattle farming in Southern Province; any commercial use, by a processor for instance, is discussed separately.
 
-**What it costs, and what we seek.** The software is not the cost; we carry it. The cost is people in the field, the production of data and the machine the records live on. Two phases over two years, about 200,000 US dollars indicative, from the partners or from a funder the partners help us approach, with our own contribution in kind; the tables are in section 3. Once it works, running it costs about 5,200 US dollars a year at pilot scale, people in the field aside: a record costs nothing to keep.
+**What it costs, and what we seek.** The software is not the cost; we carry it. The cost is people in the field, the production of data and the machine the records live on. Two phases over two years, about 215,000 US dollars indicative, from the partners or from a funder the partners help us approach, with our own contribution in kind; the tables are in section 3. Once it works, running it costs about 5,200 US dollars a year at pilot scale, people in the field aside: a record costs nothing to keep.
 
-**What works today** is in section 6: the demo, the records service and the line are running; what remains to be built is listed there, what remains to be agreed is in this brief.
+**What works today** is in section 6, under what is built and running; what remains to be agreed is in this brief.
 
 **The test, and the exit.** We would suggest that a test continues past its first season only if sick reports are answered within an agreed time, if records are complete at the point of sale, and if herders are still using it in month six without being chased. If the season shows that information was not the missing input, we say so, and the records stay with the camp in a form it can use.
 
@@ -44,7 +44,7 @@ What we have is the technology, and the people who built it. Where it is tried, 
 
 Contributed by Zamai, and committed: the development work, its hosting on our own machine, the monthly report, the adaptation of the responder to cattle, and our time. Whatever funding arrives pays the contributors' ledger first: the Tonga and field work done unpaid to get here. The Tonga is contributed from the partners' side: Matthew Sakala is already on it. The staff time of the veterinary service and the cash costs are the partners' to decide and carry.
 
-**What it costs, and what we seek.** The software is not the cost: it exists, and we carry its development and hosting ourselves. The cost is the people in the field, the production of data, and the machine the records live on, none of which can be copied and all of which have to be paid for. Two phases, indicative, in US dollars, each line costed at the upper end of what we expect and 15 percent contingency on top: a first season at one or two sites, 57,500; then the three models and readiness for a province over the following fifteen months, 141,450. Over two years, 198,950, about 200,000. We seek this from the partners, or from a funder the partners help us approach, and we bring our own contribution in kind: the development, the hosting, a year of records practice behind it, and the time of the people who built it. The people who have worked unpaid to get this far, the translator and the field contributors, are paid first from whatever arrives.
+**What it costs, and what we seek.** The software is not the cost: it exists, and we carry its development and hosting ourselves. The cost is the people in the field, the production of data, and the machine the records live on, none of which can be copied and all of which have to be paid for. Two phases, indicative, in US dollars, each line costed at the upper end of what we expect and 15 percent contingency on top: a first season at one or two sites, 64,400; then the three models and readiness for a province over the following fifteen months, 151,800. Over two years, 216,200, about 215,000. We seek this from the partners, or from a funder the partners help us approach, and we bring our own contribution in kind: the development, the hosting, a year of records practice behind it, and the time of the people who built it. The people who have worked unpaid to get this far, the translator and the field contributors, are paid first from whatever arrives.
 
 **What the whole of it needs, two phases, indicative, to be priced**
 
@@ -56,11 +56,12 @@ Contributed by Zamai, and committed: the development work, its hosting on our ow
 | 2,000 to 3,000 scored pictures: 25 to 40 dip days with a scorer and a recorder, transport | 6,000 |
 | Phones, chargers, power banks; a server, its power backup and connectivity for the year | 6,500 |
 | Model training runs and the line's model calls | 2,000 |
-| Logistics: field days at K500 per person, fuel for an existing motorbike, a bed when the tank is far, airtime and data bundles | 6,000 |
+| Two motorbikes for the recorders, with helmets, registration and insurance; fuel and maintenance for the season | 7,000 |
+| Field days at K500 per person for food, airtime and an allowance; a bed when the tank is far; a vehicle at daily rates when a bike will not do | 5,000 |
 | Training days and meetings; data-protection registration and agreements; measurement and the report | 11,000 |
-| Subtotal | 50,000 |
-| Contingency, 15 percent | 7,500 |
-| Phase 1, indicative total | 57,500 |
+| Subtotal | 56,000 |
+| Contingency, 15 percent | 8,400 |
+| Phase 1, indicative total | 64,400 |
 
 | Phase 2, the three models and readiness for a province, months ten to twenty-four | US$ |
 |---|---|
@@ -69,15 +70,16 @@ Contributed by Zamai, and committed: the development work, its hosting on our ow
 | Tonga speech: thirty to fifty hours transcribed, one voice recorded | 10,000 |
 | Training runs for the text, visual and audio models | 6,000 |
 | Five to ten more sites: phones, one or two camera sites at tanks | 20,000 |
-| Logistics across the province: vehicle hire and fuel, per diems and accommodation for three areas over two seasons, airtime and data | 15,000 |
+| Two more motorbikes for new recorders, with gear, fuel and maintenance for fifteen months | 9,000 |
+| Logistics across the province: a vehicle at daily rates and fuel, per diems and accommodation for three areas over two seasons, airtime and data | 15,000 |
 | Training and meetings across the province | 10,000 |
-| Subtotal | 123,000 |
-| Contingency, 15 percent | 18,450 |
-| Phase 2, indicative total | 141,450 |
+| Subtotal | 132,000 |
+| Contingency, 15 percent | 19,800 |
+| Phase 2, indicative total | 151,800 |
 
 **What it costs to run, once it works.** The build is the cost; the running of it is not. At pilot scale the service needs the machine's power backup and satellite connectivity, the machine itself written off over three years, the line's model calls at under one US cent a message, one refresh of the models a year, and hosting and domains: about 4,500 US dollars a year, 5,200 with 15 percent contingency. People in the field are a cost only while data is being produced; the Tonga desk only when new words are needed. A record, once the system exists, costs nothing to keep: at ten thousand animals the running cost is about fifty US cents an animal a year, at a hundred thousand a few cents.
 
-Each line is the upper end of what we expect, so that the total holds. Rates assumed: field staff at K6,000 to 20,000 a month by role, a field day at about K500 per person for transport, food, airtime and a small allowance, with existing motorbikes and vehicles used at daily rates and nothing bought, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
+Each line is the upper end of what we expect, so that the total holds. Rates assumed: field staff at K6,000 to 20,000 a month by role, a motorbike at about K30,000 with fuel and maintenance about K3,000 a month, a field day at about K500 per person for food, airtime and a small allowance, vehicles at daily rates when needed, a junior developer at K10,000 to 15,000, the desk's existing per-line rates for Tonga, rented GPU hours for training, under one US cent per message for the line's model. Nothing in these tables is a commitment; the partners price what they carry, and a funder's own template will reshape the lines.
 
 ## 4. The economics, an illustration
 
@@ -120,8 +122,6 @@ On a 220 kilogram carcass at the 2025 DRC price, about US$836, that is roughly U
 **The caveats.** The identification Act is not yet in force. Foot-and-mouth has been in Western Province since April 2026, and the neighbours show that one outbreak closes a market for months. The premiums above are paid by buyers with price grids; the DRC has no grid yet, so the first gain for Zambia is access, not grade. The one measurement that replaces the borrowed numbers is one season of carcass pairs at one abattoir: the live record against cold dressed mass, class and condemnations. That is already on the spec sheet, and it is what the records service exists to produce.
 
 ## 6. Readiness, data, law
-
-**What works today.** The demo at ngombe.zamai.pro, installable on an Android phone, in English with the herder's lines in Tonga to follow. The records service itself, live at ngombe.zamai.pro/my: an owner or herder opens a profile, accepts the terms, ties their phone number through the WhatsApp line, registers animals with pictures and makes entries; entries are hash-stamped and the owner can export them. The WhatsApp line answers within seconds, without a model: it ties the number, files a photo or a report on a named animal, records dip day for the herd, deaths, sales and calves, and reads a sick report in English, Tonga or a mix of both, the Tonga through our translator, with the original and the reading kept side by side in the record. What remains to be built is listed in section 6; what remains to be agreed is in this brief.
 
 **Built, running, to be built.** Running since 7 November 2026: the records service on our own machine, with row-level access, hash-stamped entries, terms accepted before the first record, the phone tied through the WhatsApp line, animals with pictures, the owner's export; the line filing codes, photos, reports on a named animal, dip day, deaths, sales, calves and sick reports within seconds, English, Tonga or mixed, the Tonga read through our translator and kept with the original; the Tonga translator and desk; the demo. To be built: the camp's screens and the veterinary reply; movement entries; the abattoir entry; the line's replies in Tonga (from a speaker, about twenty hours of teacher input, Matthew Sakala is on it); a vet in the loop on the line. To be agreed: the triage rules, the response protocol, the minimum record, the identification arrangement. Research, not in the pilot: weight from a picture, the muzzle as identity, breeding evaluation.
 
